@@ -10,7 +10,7 @@
                     "type": "Value",
                     "id": "95bb2d63-eff8-4552-9c67-36e08e3178c8",
                     "expectedControlType": "Vector2",
-                    "processors": "InvertVector2",
+                    "processors": "InvertVector2(invertX=false,invertY=false)",
                     "interactions": "",
                     "initialStateCheck": true
                 },
@@ -18,6 +18,24 @@
                     "name": "Run",
                     "type": "Button",
                     "id": "4f247db7-42a8-466f-a339-486954ce04d1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "6ef9cb13-39d3-43ac-8c6e-d2c449ff1f52",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Sneak",
+                    "type": "Button",
+                    "id": "89412587-2530-416a-8d35-48004d7d21bd",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -156,6 +174,50 @@
                     "action": "Horizontal Movement",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "e30f4f65-41ea-4622-af89-2e58a942b336",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a9584681-6212-4a85-baf9-6f9dad2882cb",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse & Keyboard",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7aa842e7-bccf-44fa-b8c9-45e1c97d4e40",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Sneak",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5ee79592-7c6e-4db8-acf1-db817a2ce7cc",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse & Keyboard",
+                    "action": "Sneak",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },

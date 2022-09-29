@@ -1,35 +1,35 @@
 using UnityEngine;
 using UniRx;
 
-[RequireComponent(typeof(Animator), typeof(Movement))]
-public class MovementAnimator : MonoBehaviour
+[RequireComponent(typeof(Animator), typeof(GroundLocomotion))]
+public class LocomotionAnimator : MonoBehaviour
 {
     private Animator _animator;
-    private Movement _movement;
+    private GroundLocomotion _groundLocomotion;
 
     private readonly CompositeDisposable _disposable = new CompositeDisposable();
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        _movement = GetComponent<Movement>();
+        _groundLocomotion = GetComponent<GroundLocomotion>();
     }
 
     private void OnEnable()
     {
-        _movement.State.Subscribe(state =>
+        _groundLocomotion.State.Subscribe(state =>
         {
             switch (state)
             {
-                case MovementState.Running:
+                case LocomotionState.Running:
                     _animator.SetBool("IsSprinting", false);
                     _animator.SetBool("IsSneaking", false);
                     break;
-                case MovementState.Sprinting:
+                case LocomotionState.Sprinting:
                     _animator.SetBool("IsSprinting", true);
                     _animator.SetBool("IsSneaking", false);
                     break;
-                case MovementState.Sneaking:
+                case LocomotionState.Sneaking:
                     _animator.SetBool("IsSneaking", true);
                     _animator.SetBool("IsSprinting", false);
                     break;
@@ -43,6 +43,6 @@ public class MovementAnimator : MonoBehaviour
 
     private void Update()
     {
-        _animator.SetFloat("MovementVelocity", _movement.MovementVelocityMagnitudeFraction, 0.4f, Time.deltaTime);
+        _animator.SetFloat("MovementVelocity", _groundLocomotion.VelocityMagnitudeFraction, 0.4f, Time.deltaTime);
     }
 }

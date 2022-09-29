@@ -15,7 +15,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Run",
+                    "name": "Sprint",
                     "type": "Button",
                     "id": "4f247db7-42a8-466f-a339-486954ce04d1",
                     "expectedControlType": "Button",
@@ -50,7 +50,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse & Keyboard",
-                    "action": "Run",
+                    "action": "Sprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -61,7 +61,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Run",
+                    "action": "Sprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

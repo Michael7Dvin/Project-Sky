@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : Movement
@@ -18,8 +16,12 @@ public class PlayerMovement : Movement
         _input.Movement.HorizontalMovement.performed += OnHorizontalMovementInput;
         _input.Movement.HorizontalMovement.canceled += OnHorizontalMovementInput;
 
-        _input.Movement.Run.started += context => SwitchState(MovementState.Running);
-        _input.Movement.Run.canceled += context => SwitchState(MovementState.Walking);
+        _input.Movement.Sprint.started += context => SwitchState(MovementState.Sprinting);
+        _input.Movement.Sprint.canceled += context => SwitchState(MovementState.Running);
+
+        _input.Movement.Sneak.started += context => SwitchState(MovementState.Sneaking);
+        _input.Movement.Sneak.canceled += context => SwitchState(MovementState.Running);
+
     }
 
     private void OnEnable()
@@ -42,11 +44,9 @@ public class PlayerMovement : Movement
         _inputMovementDirection = context.ReadValue<Vector2>();
         _inputMovementDirection = new Vector3(_inputMovementDirection.x, 0, _inputMovementDirection.y);
        
-        MovementMagnitude = Mathf.Clamp01(_inputMovementDirection.magnitude);
+        InputMagnitude = Mathf.Clamp01(_inputMovementDirection.magnitude);
 
-        if (MovementMagnitude > 0.5)
-        {
-            MovementMagnitude = 1;
-        }
+        _inputMovementDirection.Normalize();
+
     }
 }

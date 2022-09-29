@@ -6,56 +6,59 @@ using UniRx;
 public abstract class Movement : MonoBehaviour
 {
     private readonly ReactiveProperty<MovementState> _state = new ReactiveProperty<MovementState>();
+
     private float MoveSpeed
     {
         get
         {
             switch (_state.Value)
             {
-                case MovementState.Walking:
-                    return MovementMagnitude * _walkSpeed;
                 case MovementState.Running:
-                    return MovementMagnitude * _runSpeed;
+                    return InputMagnitude * _runSpeed;
+                case MovementState.Sprinting:
+                    return InputMagnitude * _sprintSpeed;
                 case MovementState.Sneaking:
-                    return MovementMagnitude * _sneakSpeed;
-                case MovementState.Jumping:
-                    return MovementMagnitude * _jumpHorizontalMoveSpeed;
-                case MovementState.Falling:
-                    return 0;
-                case MovementState.Sitting:
-                    return 0;
+                    return InputMagnitude * _sneakSpeed;
             }
 
             Debug.LogException(new ArgumentException());
             return 0f;
         }
     }
-    [SerializeField][Range(0, 99)] private float _walkSpeed;
+
     [SerializeField][Range(0, 99)] private float _runSpeed;
+    [SerializeField][Range(0, 99)] private float _sprintSpeed;
     [SerializeField][Range(0, 99)] private float _sneakSpeed;
-    [SerializeField][Range(0, 99)] private float _jumpHorizontalMoveSpeed;
 
     [SerializeField] private float _rotationSpeed;
 
-    private float _inputMovementMagnitude;
+    private float _inputMagnitude;
+    private float _movementVelocityMagnitudeFraction;
 
     private CharacterController _characterController;
+    private CompositeDisposable _sprintPossibilityDisposable = new CompositeDisposable();
+
+    public IReadOnlyReactiveProperty<MovementState> State => _state;
+    public float MovementVelocityMagnitudeFraction => _movementVelocityMagnitudeFraction;
+    public float RunSpeed => _runSpeed;
+    public float SprintSpeed => _sprintSpeed;
+    public float SneakSpeed => _sneakSpeed;
 
     protected Vector3 MovementDirection { get; set; }
-    protected float MovementMagnitude
+    public float InputMagnitude
     {
-        get { return _inputMovementMagnitude; }
+        get { return _inputMagnitude; }
 
-        set
+        protected set
         {
             if(value < 0f)
             {
                 Debug.LogException(new ArgumentException());
-                _inputMovementMagnitude = 0;
+                _inputMagnitude = 0;
             }
             else
             {
-                _inputMovementMagnitude = value;
+                _inputMagnitude = value;
             }
         }
     }    
@@ -65,10 +68,25 @@ public abstract class Movement : MonoBehaviour
         _characterController = GetComponent<CharacterController>();
     }
 
+    private void OnDisable()
+    {
+        _sprintPossibilityDisposable.Clear();
+    }
+
     protected virtual void Update()
     {
         _characterController.Move(Physics.gravity * Time.deltaTime);
+
         MoveHorizontal();
+
+        if(float.IsNaN(_characterController.velocity.magnitude / MoveSpeed))
+        {
+            _movementVelocityMagnitudeFraction = 0f;
+        }
+        else
+        {
+            _movementVelocityMagnitudeFraction = Mathf.Clamp01(_characterController.velocity.magnitude / MoveSpeed);
+        }                 
     }
     
     protected void SwitchState(MovementState state)
@@ -80,11 +98,11 @@ public abstract class Movement : MonoBehaviour
     {
         if (MovementDirection != Vector3.zero)
         {
-            if(_characterController.isGrounded == true)
+            if (_characterController.isGrounded == true)
             {
                 MovementDirection.Normalize();
 
-                Vector3 velocity = MoveSpeed * MovementDirection;
+                Vector3 velocity = MoveSpeed * MovementDirection * _inputMagnitude;
                 _characterController.Move(velocity * Time.deltaTime);
 
                 Quaternion rotation = Quaternion.LookRotation(MovementDirection);

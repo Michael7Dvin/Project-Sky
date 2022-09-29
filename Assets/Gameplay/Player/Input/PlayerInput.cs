@@ -37,7 +37,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Run"",
+                    ""name"": ""Sprint"",
                     ""type"": ""Button"",
                     ""id"": ""4f247db7-42a8-466f-a339-486954ce04d1"",
                     ""expectedControlType"": ""Button"",
@@ -72,7 +72,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Mouse & Keyboard"",
-                    ""action"": ""Run"",
+                    ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -83,7 +83,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Run"",
+                    ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -371,7 +371,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         // Movement
         m_Movement = asset.FindActionMap("Movement", throwIfNotFound: true);
         m_Movement_HorizontalMovement = m_Movement.FindAction("Horizontal Movement", throwIfNotFound: true);
-        m_Movement_Run = m_Movement.FindAction("Run", throwIfNotFound: true);
+        m_Movement_Sprint = m_Movement.FindAction("Sprint", throwIfNotFound: true);
         m_Movement_Jump = m_Movement.FindAction("Jump", throwIfNotFound: true);
         m_Movement_Sneak = m_Movement.FindAction("Sneak", throwIfNotFound: true);
         // Camera
@@ -437,7 +437,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Movement;
     private IMovementActions m_MovementActionsCallbackInterface;
     private readonly InputAction m_Movement_HorizontalMovement;
-    private readonly InputAction m_Movement_Run;
+    private readonly InputAction m_Movement_Sprint;
     private readonly InputAction m_Movement_Jump;
     private readonly InputAction m_Movement_Sneak;
     public struct MovementActions
@@ -445,7 +445,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         private @PlayerInput m_Wrapper;
         public MovementActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @HorizontalMovement => m_Wrapper.m_Movement_HorizontalMovement;
-        public InputAction @Run => m_Wrapper.m_Movement_Run;
+        public InputAction @Sprint => m_Wrapper.m_Movement_Sprint;
         public InputAction @Jump => m_Wrapper.m_Movement_Jump;
         public InputAction @Sneak => m_Wrapper.m_Movement_Sneak;
         public InputActionMap Get() { return m_Wrapper.m_Movement; }
@@ -460,9 +460,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @HorizontalMovement.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnHorizontalMovement;
                 @HorizontalMovement.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnHorizontalMovement;
                 @HorizontalMovement.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnHorizontalMovement;
-                @Run.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnRun;
-                @Run.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnRun;
-                @Run.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnRun;
+                @Sprint.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnSprint;
+                @Sprint.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnSprint;
+                @Sprint.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnSprint;
                 @Jump.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnJump;
@@ -476,9 +476,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @HorizontalMovement.started += instance.OnHorizontalMovement;
                 @HorizontalMovement.performed += instance.OnHorizontalMovement;
                 @HorizontalMovement.canceled += instance.OnHorizontalMovement;
-                @Run.started += instance.OnRun;
-                @Run.performed += instance.OnRun;
-                @Run.canceled += instance.OnRun;
+                @Sprint.started += instance.OnSprint;
+                @Sprint.performed += instance.OnSprint;
+                @Sprint.canceled += instance.OnSprint;
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
@@ -543,7 +543,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     public interface IMovementActions
     {
         void OnHorizontalMovement(InputAction.CallbackContext context);
-        void OnRun(InputAction.CallbackContext context);
+        void OnSprint(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnSneak(InputAction.CallbackContext context);
     }

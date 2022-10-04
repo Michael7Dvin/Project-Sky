@@ -4,22 +4,24 @@ public class PlayerLocomotionInput : LocomotionInput
 {
     [SerializeField] Transform _camera;
 
-    private Vector3 _notAllignToCameraInputDirection;
+    private Vector3 _notAlignedToCameraInputDirection;
     private PlayerInput _input;
 
     private void Awake()
     {       
         _input = new PlayerInput();
 
-        _input.Movement.HorizontalMovement.started += OnHorizontalLocomotionInput;
-        _input.Movement.HorizontalMovement.performed += OnHorizontalLocomotionInput;
-        _input.Movement.HorizontalMovement.canceled += OnHorizontalLocomotionInput;
+        _input.Movement.HorizontalMovement.started += OnHorizontalInput;
+        _input.Movement.HorizontalMovement.performed += OnHorizontalInput;
+        _input.Movement.HorizontalMovement.canceled += OnHorizontalInput;
 
-        _input.Movement.Sprint.started += context => _locomotionInputAction.Value = (LocomotionState.Sprinting, true);
-        _input.Movement.Sprint.canceled += context => _locomotionInputAction.Value = (LocomotionState.Sprinting, false);
+        _input.Movement.Jump.started += conext => _locomotionType.Value = (global::LocomotionType.Jump);
 
-        _input.Movement.Sneak.started += context => _locomotionInputAction.Value = (LocomotionState.Sneaking, true);
-        _input.Movement.Sneak.canceled += context => _locomotionInputAction.Value = (LocomotionState.Sneaking, false);
+        _input.Movement.Sprint.started += context => _locomotionMoveSpeedTypeAction.Value = (LocomotionMoveSpeedType.Sprint, true);
+        _input.Movement.Sprint.canceled += context => _locomotionMoveSpeedTypeAction.Value = (LocomotionMoveSpeedType.Sprint, false);
+
+        _input.Movement.Sneak.started += context => _locomotionMoveSpeedTypeAction.Value = (LocomotionMoveSpeedType.Slow, true);
+        _input.Movement.Sneak.canceled += context => _locomotionMoveSpeedTypeAction.Value = (LocomotionMoveSpeedType.Slow, false);
     }
 
     private void OnEnable() => _input.Enable();
@@ -27,12 +29,12 @@ public class PlayerLocomotionInput : LocomotionInput
 
     private void Update()
     {
-        InputDirection = Quaternion.AngleAxis(_camera.rotation.eulerAngles.y, Vector3.up) * _notAllignToCameraInputDirection;
+        Direction = Quaternion.AngleAxis(_camera.rotation.eulerAngles.y, Vector3.up) * _notAlignedToCameraInputDirection;
     }
 
-    private void OnHorizontalLocomotionInput(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    private void OnHorizontalInput(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        _notAllignToCameraInputDirection = context.ReadValue<Vector2>();
-        _notAllignToCameraInputDirection = new Vector3(_notAllignToCameraInputDirection.x, 0, _notAllignToCameraInputDirection.y);
+        _notAlignedToCameraInputDirection = context.ReadValue<Vector2>();
+        _notAlignedToCameraInputDirection = new Vector3(_notAlignedToCameraInputDirection.x, 0, _notAlignedToCameraInputDirection.y);
     }
 }

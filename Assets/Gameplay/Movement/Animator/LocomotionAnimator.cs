@@ -1,48 +1,85 @@
 using UnityEngine;
 using UniRx;
 
-[RequireComponent(typeof(Animator), typeof(GroundLocomotion))]
+[RequireComponent(typeof(Animator), typeof(LocomotionComposition))]
 public class LocomotionAnimator : MonoBehaviour
 {
     private Animator _animator;
-    private GroundLocomotion _groundLocomotion;
+    private LocomotionComposition _locomotionComposition;
 
     private readonly CompositeDisposable _disposable = new CompositeDisposable();
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        _groundLocomotion = GetComponent<GroundLocomotion>();
+        _locomotionComposition = GetComponent<LocomotionComposition>();
     }
 
     private void OnEnable()
     {
-        _groundLocomotion.State.Subscribe(state =>
-        {
-            switch (state)
+                _locomotionComposition
+            .CurrentLocomotionMoveSpeedType
+            .Subscribe(state =>
             {
-                case LocomotionState.Running:
-                    _animator.SetBool("IsSprinting", false);
-                    _animator.SetBool("IsSneaking", false);
-                    break;
-                case LocomotionState.Sprinting:
-                    _animator.SetBool("IsSprinting", true);
-                    _animator.SetBool("IsSneaking", false);
-                    break;
-                case LocomotionState.Sneaking:
-                    _animator.SetBool("IsSneaking", true);
-                    _animator.SetBool("IsSprinting", false);
-                    break;
-            }
+                switch (state)
+                {
+                    case LocomotionMoveSpeedType.Normal:
+                        _animator.SetBool("LocomotionIsSprinting", false);
+                        _animator.SetBool("LocomotionIsSlow", false);
+                        break;
+                    case LocomotionMoveSpeedType.Sprint:
+                        _animator.SetBool("LocomotionIsSprinting", true);
+                        _animator.SetBool("LocomotionIsSlow", false);
+                        break;
+                    case LocomotionMoveSpeedType.Slow:
+                        _animator.SetBool("LocomotionIsSlow", true);
+                        _animator.SetBool("LocomotionIsSprinting", false);
+                        break;
+                }
 
-        }).AddTo(_disposable);
+            }).AddTo(_disposable);
 
+        _locomotionComposition
+            .CurrentLocomotionType
+            .Subscribe(type =>
+            {
+                switch (type)
+                {
+                    case LocomotionType.Fall:
+                        _animator.SetBool("LocomotionIsFalling", true);
+                        break;
+                    case LocomotionType.Ground:
+                        _animator.SetBool("LocomotionIsFalling", false);
+                        break;
+                }
+
+            }).AddTo(_disposable);
     }
 
     private void OnDisable() => _disposable.Dispose();
 
     private void Update()
     {
-        _animator.SetFloat("MovementVelocity", _groundLocomotion.VelocityMagnitudeFraction, 0.4f, Time.deltaTime);
+        SetLocomotionHorizontalVelocity();
+        SetLocomotionVerticalVelocity();
+    }
+
+    private void SetLocomotionHorizontalVelocity()
+    {
+        if (float.IsNaN(_locomotionComposition.CurrentVelocity.magnitude / _locomotionComposition.CurrentHorizontalMoveSpeed))
+        {
+            float velocity = 0f;
+            _animator.SetFloat("LocomotionHorizontalVelocity", velocity, 0.3f, Time.deltaTime);
+        }
+        else
+        {
+            float velocity = Mathf.Clamp01(_locomotionComposition.CurrentVelocity.magnitude / _locomotionComposition.CurrentHorizontalMoveSpeed); 
+            _animator.SetFloat("LocomotionHorizontalVelocity", velocity, 0.3f, Time.deltaTime);
+        }
+    }
+
+    private void SetLocomotionVerticalVelocity()
+    {
+
     }
 }

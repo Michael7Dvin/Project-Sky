@@ -22,8 +22,8 @@ public class InitialPlayerLocomotionProvider : MonoBehaviour
         locomotionComposition.ChangeGroundLocomotion(_defaultGroundLocomotion);
         locomotionComposition.ChangeFallLocomotion(_defaultFallLocomotion);
 
-        //GlideFallLocomotion _glideFallLocomotion = new GlideFallLocomotion(-4f, 3f, 6f, 1.5f, 1.5f, _fallRotationSpeed);
-        //locomotionComposition.ChangeFallLocomotion(_glideFallLocomotion);
+        GlideFallLocomotion _glideFallLocomotion = new GlideFallLocomotion(-4f, -6f, 4f, 9f, -9.8f, 3f, _fallRotationSpeed);
+        locomotionComposition.ChangeFallLocomotion(_glideFallLocomotion);
 
         Destroy(this);
     }

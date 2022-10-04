@@ -3,33 +3,44 @@ using System;
 
 public class GlideFallLocomotion : DefaultFallLocomotion
 {
-    private readonly float _glideFastSpeed;
-    private readonly float _glideFastSpeedMultiplier;
-    private readonly float _glideFastSpeedDivider;
+    private readonly float _normalGlideHorizontalSpeed;
+    private readonly float _fastGlideHorizontalSpeed;
 
-    public GlideFallLocomotion(float verticalSpeed, float glideNormalSpeed, float glideFastSpeed, float glideFastSpeedMultiplier, float glideFastSpeedDivider, float rotationSpeed) : base(verticalSpeed, glideNormalSpeed, rotationSpeed)
+    private readonly float _normalGlideVerticalSpeed;
+    private readonly float _fastGlideVerticalSpeed;
+
+    public GlideFallLocomotion(float normalGlideVerticalSpeed, float fastGlideVerticalSpeed, float normalGlideHorizontalSpeed, float fastGlideHorizontalSpeed, float verticalSpeed, float horizontalSpeed, float rotationSpeed) : base(verticalSpeed, horizontalSpeed, rotationSpeed)
     {
-        _glideFastSpeed = glideFastSpeed;
-        _glideFastSpeedMultiplier = glideFastSpeedMultiplier;
-        _glideFastSpeedDivider = glideFastSpeedDivider;
+        _normalGlideHorizontalSpeed = normalGlideHorizontalSpeed;
+        _fastGlideHorizontalSpeed = fastGlideHorizontalSpeed;
+
+        _normalGlideVerticalSpeed = normalGlideVerticalSpeed;
+        _fastGlideVerticalSpeed = fastGlideVerticalSpeed;
     }
 
     public override float VerticalMoveSpeed
     {
         get
         {
-            switch (LocomotionComposition.CurrentLocomotionMoveSpeedType.Value)
+            if(LocomotionComposition.CurrentLocomotionType.Value == LocomotionType.Fall)
             {
-                case LocomotionMoveSpeedType.Normal:
-                    return VerticalSpeed;
-                case LocomotionMoveSpeedType.Sprint:
-                    return VerticalSpeed * _glideFastSpeedMultiplier;
-                case LocomotionMoveSpeedType.Slow:
-                    return VerticalSpeed / _glideFastSpeedDivider;
-            }
+                switch (LocomotionComposition.CurrentLocomotionMoveSpeedType.Value)
+                {
+                    case LocomotionMoveSpeedType.Normal:
+                        return _normalGlideVerticalSpeed;
+                    case LocomotionMoveSpeedType.Sprint:
+                        return _fastGlideVerticalSpeed;
+                    case LocomotionMoveSpeedType.Slow:
+                        return _normalGlideVerticalSpeed;
+                }
 
-            Debug.LogException(new ArgumentException());
-            return 0f;
+                Debug.LogException(new ArgumentException());
+                return 0f;
+            }
+            else
+            {
+                return VerticalSpeed;
+            }
         }
     }
 
@@ -37,18 +48,25 @@ public class GlideFallLocomotion : DefaultFallLocomotion
     {
         get
         {
-            switch (LocomotionComposition.CurrentLocomotionMoveSpeedType.Value)
+            if (LocomotionComposition.CurrentLocomotionType.Value == LocomotionType.Fall)
             {
-                case LocomotionMoveSpeedType.Normal:
-                    return LocomotionComposition.HorizontalInputMagnitude * HorizontalSpeed;
-                case LocomotionMoveSpeedType.Sprint:
-                    return LocomotionComposition.HorizontalInputMagnitude * _glideFastSpeed;
-                case LocomotionMoveSpeedType.Slow:
-                    return LocomotionComposition.HorizontalInputMagnitude * 0f;
-            }
+                switch (LocomotionComposition.CurrentLocomotionMoveSpeedType.Value)
+                {
+                    case LocomotionMoveSpeedType.Normal:
+                        return LocomotionComposition.HorizontalInputMagnitude * _normalGlideHorizontalSpeed;
+                    case LocomotionMoveSpeedType.Sprint:
+                        return LocomotionComposition.HorizontalInputMagnitude * _fastGlideHorizontalSpeed;
+                    case LocomotionMoveSpeedType.Slow:
+                        return LocomotionComposition.HorizontalInputMagnitude * _normalGlideHorizontalSpeed;
+                }
 
-            Debug.LogException(new ArgumentException());
-            return 0f;
+                Debug.LogException(new ArgumentException());
+                return 0f;
+            }
+            else
+            {
+                return HorizontalSpeed;
+            }
         }
     }
 }

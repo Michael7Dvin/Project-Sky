@@ -77,6 +77,8 @@ public class LocomotionComposition : MonoBehaviour
     public LocomotionInput Input => _input;
     public CharacterController CharacterController { get; private set; }
 
+    [SerializeField] private GroundDetector _groundDetector;
+
     private void Awake()
     {
         CharacterController = GetComponent<CharacterController>();
@@ -94,25 +96,25 @@ public class LocomotionComposition : MonoBehaviour
             .Subscribe(action => OnInputLocomotionMoveSpeedAction(action.Item1, action.Item2))
             .AddTo(_disposable);
 
-        Observable
+        Observable          
             .EveryUpdate()
             .Subscribe(_ =>
             {
-                if (Mathf.Abs(Fall.Velocity.y - Fall.VerticalMoveSpeed) < 1)
+                if (_groundDetector.IsGrounded == false && Mathf.Abs(Fall.Velocity.y - Fall.VerticalMoveSpeed) < 1)
                 {
                     if (_currentLocomotionType.Value == LocomotionType.Ground || _currentLocomotionType.Value == LocomotionType.Jump)
                     {
                         _currentLocomotionType.Value = LocomotionType.Fall;
                     }
                 }
-                else
+                else if (_groundDetector.IsGrounded == true)
                 {
                     if (_currentLocomotionType.Value != LocomotionType.Ground)
                     {                        
                         _currentLocomotionType.Value = LocomotionType.Ground;
                     }
                 }
-            })
+            })            
             .AddTo(_disposable);
     }
 

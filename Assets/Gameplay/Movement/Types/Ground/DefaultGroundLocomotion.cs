@@ -2,18 +2,23 @@ using System;
 using UniRx;
 using UnityEngine;
 
-public class DefaultGroundLocomotion : GroundLocomotion
+public class DefaultGroundLocomotion : BaseGroundLocomotion
 {
-    private Vector3 _velocity;
-
+    private float _jogSpeed;
+    private float _sprintSpeed;
+    private float _sneakSpeed;
+    private float _rotationSpeed;
+    
     private readonly CompositeDisposable _disposable = new CompositeDisposable();
-    private readonly CompositeDisposable _everyUpdateDisposable = new CompositeDisposable();
+    private readonly CompositeDisposable _moveDisposable = new CompositeDisposable();
 
-    public DefaultGroundLocomotion(float runSpeed, float sprintSpeed, float sneakSpeed, float rotationSpeed) : base(runSpeed, sprintSpeed, sneakSpeed, rotationSpeed)
+    public DefaultGroundLocomotion(float jogSpeed, float sprintSpeed, float sneakSpeed, float rotationSpeed)
     {
+        _jogSpeed = jogSpeed;
+        _sprintSpeed = sprintSpeed;
+        _sneakSpeed = sneakSpeed;
+        _rotationSpeed = rotationSpeed;
     }
-
-    public override Vector3 Velocity => _velocity;
 
     public override float VerticalMoveSpeed => 0f;
     public override float HorizontalMoveSpeed
@@ -23,11 +28,11 @@ public class DefaultGroundLocomotion : GroundLocomotion
             switch (LocomotionComposition.CurrentLocomotionMoveSpeedType.Value)
             {
                 case LocomotionMoveSpeedType.Normal:
-                    return LocomotionComposition.HorizontalInputMagnitude * JogSpeed;
+                    return LocomotionComposition.HorizontalInputMagnitude * _jogSpeed;
                 case LocomotionMoveSpeedType.Sprint:
-                    return LocomotionComposition.HorizontalInputMagnitude * SprintSpeed;
+                    return LocomotionComposition.HorizontalInputMagnitude * _sprintSpeed;
                 case LocomotionMoveSpeedType.Slow:
-                    return LocomotionComposition.HorizontalInputMagnitude * SneakSpeed;
+                    return LocomotionComposition.HorizontalInputMagnitude * _sneakSpeed;
             }
 
             Debug.LogException(new ArgumentException());
@@ -43,16 +48,12 @@ public class DefaultGroundLocomotion : GroundLocomotion
            .CurrentLocomotionType
            .Subscribe(type =>
            {
-               _everyUpdateDisposable.Clear();
+               _moveDisposable.Clear();
 
                if (type == LocomotionType.Ground)
                {
-                   Observable
-                   .EveryUpdate()
-                   .Subscribe(_ => Move())
-                   .AddTo(_everyUpdateDisposable);
+                   StartMovement();
                }
-
            })
            .AddTo(_disposable);
     }
@@ -60,10 +61,18 @@ public class DefaultGroundLocomotion : GroundLocomotion
     public override void Disable()
     {
         _disposable.Clear();
-        _everyUpdateDisposable.Clear();
+        _moveDisposable.Clear();
     }
 
-    protected override void Move()
+    private void StartMovement()
+    {
+        Observable
+        .EveryUpdate()
+        .Subscribe(_ => Move())
+        .AddTo(_moveDisposable);
+    }
+
+    private void Move()
     {
         if (Input.Direction != Vector3.zero)
         {
@@ -73,10 +82,8 @@ public class DefaultGroundLocomotion : GroundLocomotion
                 CharacterController.Move(velocity * Time.deltaTime);
 
                 Quaternion rotation = Quaternion.LookRotation(Input.Direction);
-                Transform.rotation = Quaternion.RotateTowards(Transform.rotation, rotation, RotationSpeed * Time.deltaTime);
+                Transform.rotation = Quaternion.RotateTowards(Transform.rotation, rotation, _rotationSpeed * Time.deltaTime);
             }
         }
-
-        _velocity = CharacterController.velocity;
     }
 }

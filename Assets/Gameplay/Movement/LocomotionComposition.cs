@@ -5,15 +5,19 @@ using UniRx;
 [RequireComponent(typeof(CharacterController))]
 public class LocomotionComposition : MonoBehaviour
 {
+    public Vector3 MoveVelocity;
+
     private ReactiveProperty<LocomotionType> _currentLocomotionType = new ReactiveProperty<LocomotionType>();
     private ReactiveProperty<LocomotionMoveSpeedType> _currentLocomotionMoveSpeedType = new ReactiveProperty<LocomotionMoveSpeedType>();
 
     [SerializeField] private LocomotionInput _input;
     private readonly CompositeDisposable _disposable = new CompositeDisposable();
 
-    public GroundLocomotion Ground { get; private set; }
-    public FallLocomotion Fall { get; private set; }
-    public JumpLocomotion Jump { get; private set; }
+    public BaseGroundLocomotion Ground { get; private set; }
+    public BaseFallLocomotion Fall { get; private set; }
+    public BaseJumpLocomotion Jump { get; private set; }
+
+    [SerializeField] private GroundDetector _groundDetector;
 
     public float HorizontalInputMagnitude
     {
@@ -56,38 +60,19 @@ public class LocomotionComposition : MonoBehaviour
         }
     }
 
-    public Vector3 CurrentVelocity
-    {
-        get
-        {
-            switch (_currentLocomotionType.Value)
-            {
-                case LocomotionType.Ground:
-                    return Ground.Velocity;
-                case LocomotionType.Fall:
-                    return Fall.Velocity;
-            }
-            return Vector3.zero;
-        }
-    }
+    public Vector3 CharacterVelocity => CharacterController.velocity;
 
-    public ReactiveProperty<LocomotionType> CurrentLocomotionType => _currentLocomotionType;
-    public ReactiveProperty<LocomotionMoveSpeedType> CurrentLocomotionMoveSpeedType => _currentLocomotionMoveSpeedType;
+    public IReadOnlyReactiveProperty<LocomotionType> CurrentLocomotionType => _currentLocomotionType;
+    public IReadOnlyReactiveProperty<LocomotionMoveSpeedType> CurrentLocomotionMoveSpeedType => _currentLocomotionMoveSpeedType;
 
     public LocomotionInput Input => _input;
     public CharacterController CharacterController { get; private set; }
 
-    [SerializeField] private GroundDetector _groundDetector;
-
-    private void Awake()
-    {
-        CharacterController = GetComponent<CharacterController>();
-    }
-
+    private void Awake() => CharacterController = GetComponent<CharacterController>();
     private void OnEnable()
     {
         Input
-            .LocomotionType
+            .CurrentLocomotionType
             .Subscribe(type => OnInputLocomotionType(type))
             .AddTo(_disposable);
 
@@ -100,14 +85,16 @@ public class LocomotionComposition : MonoBehaviour
             .EveryUpdate()
             .Subscribe(_ =>
             {
-                if (_groundDetector.IsGrounded == false && Mathf.Abs(Fall.Velocity.y - Fall.VerticalMoveSpeed) < 1)
+                CharacterController.Move(MoveVelocity * Time.deltaTime);
+
+                if (_groundDetector.IsGrounded == false && Mathf.Abs(CharacterVelocity.y - Fall.VerticalMoveSpeed) < 1)
                 {
                     if (_currentLocomotionType.Value == LocomotionType.Ground || _currentLocomotionType.Value == LocomotionType.Jump)
                     {
                         _currentLocomotionType.Value = LocomotionType.Fall;
                     }
                 }
-                else if (_groundDetector.IsGrounded == true)
+                else if (CharacterController.isGrounded == true)
                 {
                     if (_currentLocomotionType.Value != LocomotionType.Ground)
                     {                        
@@ -121,7 +108,7 @@ public class LocomotionComposition : MonoBehaviour
     private void OnDisable() => _disposable.Clear();
     private void OnDestroy() => _disposable.Dispose();
     
-    public void ChangeGroundLocomotion(GroundLocomotion groundLocomotion)
+    public void ChangeGroundLocomotion(BaseGroundLocomotion groundLocomotion)
     {
         if (groundLocomotion == null)
         {
@@ -133,7 +120,7 @@ public class LocomotionComposition : MonoBehaviour
         Ground = groundLocomotion;
         Ground.Initialize(this);
     }
-    public void ChangeFallLocomotion(FallLocomotion fallLocomotion)
+    public void ChangeFallLocomotion(BaseFallLocomotion fallLocomotion)
     {
         if (fallLocomotion == null)
         {
@@ -145,7 +132,7 @@ public class LocomotionComposition : MonoBehaviour
         Fall = fallLocomotion;
         Fall.Initialize(this);
     }
-    public void ChangeJumpLocomotion(JumpLocomotion jumpLocomotion)
+    public void ChangeJumpLocomotion(BaseJumpLocomotion jumpLocomotion)
     {
         if (jumpLocomotion == null)
         {
@@ -160,7 +147,7 @@ public class LocomotionComposition : MonoBehaviour
 
     private void OnInputLocomotionType(LocomotionType type)
     {
-        if (CharacterController.isGrounded == true)
+        if (_groundDetector.IsGrounded == true)
         {
             _currentLocomotionType.Value = type;
         }

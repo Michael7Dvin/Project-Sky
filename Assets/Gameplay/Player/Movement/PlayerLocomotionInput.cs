@@ -15,7 +15,8 @@ public class PlayerLocomotionInput : LocomotionInput
         _input.Movement.HorizontalMovement.performed += OnHorizontalInput;
         _input.Movement.HorizontalMovement.canceled += OnHorizontalInput;
 
-        _input.Movement.Jump.started += conext => _locomotionType.Value = (global::LocomotionType.Jump);
+        _input.Movement.Jump.started += conext => _currentLocomotionType.Value = LocomotionType.Jump;
+        _input.Movement.Jump.canceled += conext => _currentLocomotionType.Value = LocomotionType.Ground;
 
         _input.Movement.Sprint.started += context => _locomotionMoveSpeedTypeAction.Value = (LocomotionMoveSpeedType.Sprint, true);
         _input.Movement.Sprint.canceled += context => _locomotionMoveSpeedTypeAction.Value = (LocomotionMoveSpeedType.Sprint, false);

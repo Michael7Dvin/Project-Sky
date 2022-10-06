@@ -45,11 +45,14 @@ public class LocomotionAnimator : MonoBehaviour
             {
                 switch (type)
                 {
+                    case LocomotionType.Ground:
+                        _animator.SetBool("LocomotionIsFalling", false);
+                        break;
                     case LocomotionType.Fall:
                         _animator.SetBool("LocomotionIsFalling", true);
                         break;
-                    case LocomotionType.Ground:
-                        _animator.SetBool("LocomotionIsFalling", false);
+                    case LocomotionType.Jump:
+                        _animator.SetBool("LocomotionIsFalling", true);
                         break;
                 }
 
@@ -66,14 +69,14 @@ public class LocomotionAnimator : MonoBehaviour
 
     private void SetLocomotionHorizontalVelocity()
     {
-        if (float.IsNaN(_locomotionComposition.CurrentVelocity.magnitude / _locomotionComposition.CurrentHorizontalMoveSpeed))
+        if (float.IsNaN(_locomotionComposition.CharacterVelocity.magnitude / _locomotionComposition.CurrentHorizontalMoveSpeed))
         {
             float velocity = 0f;
             _animator.SetFloat("LocomotionHorizontalVelocity", velocity, 0.3f, Time.deltaTime);
         }
         else
         {
-            float velocity = Mathf.Clamp01(_locomotionComposition.CurrentVelocity.magnitude / _locomotionComposition.CurrentHorizontalMoveSpeed); 
+            float velocity = Mathf.Clamp01(_locomotionComposition.CharacterVelocity.magnitude / _locomotionComposition.CurrentHorizontalMoveSpeed); 
             _animator.SetFloat("LocomotionHorizontalVelocity", velocity, 0.3f, Time.deltaTime);
         }
     }

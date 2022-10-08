@@ -12,7 +12,6 @@ public class GlideFlyLocomotion : BaseFlyLocomotion
 
     private readonly float _rotationSpeed;
 
-    private readonly CompositeDisposable _disposable = new CompositeDisposable();
     private readonly CompositeDisposable _moveDisposable = new CompositeDisposable();
 
     public GlideFlyLocomotion(float normalGlideVerticalSpeed, float fastGlideVerticalSpeed, float normalGlideHorizontalSpeed, float fastGlideHorizontalSpeed, float rotationSpeed)

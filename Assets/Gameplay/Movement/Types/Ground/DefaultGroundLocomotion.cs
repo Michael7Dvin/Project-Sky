@@ -9,7 +9,6 @@ public class DefaultGroundLocomotion : BaseGroundLocomotion
     private float _sneakSpeed;
     private float _rotationSpeed;
     
-    private readonly CompositeDisposable _disposable = new CompositeDisposable();
     private readonly CompositeDisposable _moveDisposable = new CompositeDisposable();
 
     public DefaultGroundLocomotion(float jogSpeed, float sprintSpeed, float sneakSpeed, float rotationSpeed)

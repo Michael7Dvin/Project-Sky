@@ -7,7 +7,6 @@ public class DefaultFallLocomotion : BaseFallLocomotion
     private readonly float _horizontalSpeed;
     private readonly float _rotationSpeed;
 
-    private readonly CompositeDisposable _disposable = new CompositeDisposable();
     private readonly CompositeDisposable _horizontalMoveDisposable = new CompositeDisposable();
 
     public DefaultFallLocomotion(float verticalSpeed, float horizontalSpeed, float rotationSpeed) 

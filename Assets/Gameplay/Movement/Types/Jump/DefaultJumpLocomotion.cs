@@ -4,19 +4,22 @@ using UniRx;
 public class DefaultJumpLocomotion : BaseJumpLocomotion
 {
     private float _jumpSpeed;
-    private float _horizontalSpeed;
+    private float _normalHorizontalSpeed;
+    private float _sprintHorizontalSpeed;
 
-    private CompositeDisposable _disposable = new CompositeDisposable();
-    private CompositeDisposable _horizontalMoveDisposable = new CompositeDisposable();
+    private float _currentHorizontalSpeed;
 
-    public DefaultJumpLocomotion(float jumpSpeed, float horizontalSpeed)
+    private readonly CompositeDisposable _horizontalMoveDisposable = new CompositeDisposable();
+
+    public DefaultJumpLocomotion(float jumpSpeed, float normalHorizontalSpeed, float sprintHorizontalSpeed)
     {
         _jumpSpeed = jumpSpeed;
-        _horizontalSpeed = horizontalSpeed;
+        _normalHorizontalSpeed = normalHorizontalSpeed;
+        _sprintHorizontalSpeed = sprintHorizontalSpeed;
     }
 
     public override float VerticalMoveSpeed => _jumpSpeed;
-    public override float HorizontalMoveSpeed => LocomotionComposition.HorizontalInputMagnitude * _horizontalSpeed;
+    public override float HorizontalMoveSpeed => _currentHorizontalSpeed;
 
     public override void Initialize(LocomotionComposition locomotionComposition)
     {
@@ -30,7 +33,11 @@ public class DefaultJumpLocomotion : BaseJumpLocomotion
                 
                 if (type == LocomotionType.Jump)
                 {
-                    Jump();
+                    if(LocomotionComposition.GroundDetector.IsGrounded == true)
+                    {
+                        Jump();
+                    }
+
                     StartHorizontalMovement();
                 }
             })
@@ -43,10 +50,19 @@ public class DefaultJumpLocomotion : BaseJumpLocomotion
         _horizontalMoveDisposable.Clear();
     }
 
-    private void Jump() => LocomotionComposition.MoveVelocity.y = _jumpSpeed;
+    protected void Jump() => LocomotionComposition.MoveVelocity.y = _jumpSpeed;
 
     private void StartHorizontalMovement()
     {
+        if (LocomotionComposition.CurrentLocomotionMoveSpeedType.Value == LocomotionMoveSpeedType.Sprint)
+        {
+            _currentHorizontalSpeed = _sprintHorizontalSpeed;
+        }
+        else
+        {
+            _currentHorizontalSpeed = _normalHorizontalSpeed;
+        }
+
         Observable
             .EveryUpdate()
             .Subscribe(_ => HorizontalMove())

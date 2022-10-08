@@ -67,6 +67,7 @@ public class LocomotionComposition : MonoBehaviour
 
     public LocomotionInput Input => _input;
     public CharacterController CharacterController { get; private set; }
+    public GroundDetector GroundDetector => _groundDetector;
 
     private void Awake() => CharacterController = GetComponent<CharacterController>();
     private void OnEnable()
@@ -151,9 +152,9 @@ public class LocomotionComposition : MonoBehaviour
         {
             _currentLocomotionType.Value = type;
         }
-        else if (type == (LocomotionType.Jump | LocomotionType.Fly))
+        else if (type == LocomotionType.Jump || type == LocomotionType.Fly)
         {
-            _currentLocomotionType.Value = type;
+            _currentLocomotionType.SetValueAndForceNotify(type);
         }
     }
     private void OnInputLocomotionMoveSpeedAction(LocomotionMoveSpeedType type, bool status)

@@ -1,8 +1,10 @@
+using UniRx;
 using UnityEngine;
 
 public abstract class BaseLocomotion
 {
     private const float TOWARDS_MOVE_ROTATION_SPEED = 400f;
+    protected readonly CompositeDisposable _disposable = new CompositeDisposable();
 
     public abstract LocomotionType Type { get; }
 

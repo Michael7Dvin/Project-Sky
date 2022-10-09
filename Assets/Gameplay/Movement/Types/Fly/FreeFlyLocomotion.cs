@@ -2,25 +2,24 @@ using System;
 using UnityEngine;
 using UniRx;
 
-public class GlideFlyLocomotion : BaseFlyLocomotion
+public class FreeFlyLocomotion : BaseFlyLocomotion
 {
     private readonly float _normalHorizontalSpeed;
-    private readonly float _fastHorizontalSpeed;
-
+    private readonly float _fastHorizontalSpeed;   
+    
     private readonly float _normalVerticalSpeed;
     private readonly float _fastVerticalSpeed;
 
-    private readonly CompositeDisposable _glideDisposable = new CompositeDisposable();
+    private readonly CompositeDisposable _flyDisposable = new CompositeDisposable();
 
-    public GlideFlyLocomotion(float normalGlideVerticalSpeed, float fastGlideVerticalSpeed, float normalGlideHorizontalSpeed, float fastGlideHorizontalSpeed)
+    public FreeFlyLocomotion(float normalHorizontalSpeed, float sprintHorizontalSpeed, float normalVerticalSpeed, float sprintVerticalSpeed)
     {
-        _normalVerticalSpeed = normalGlideVerticalSpeed;
-        _normalHorizontalSpeed = normalGlideHorizontalSpeed;
-
-        _fastVerticalSpeed = fastGlideVerticalSpeed;
-        _fastHorizontalSpeed = fastGlideHorizontalSpeed;
+        _normalHorizontalSpeed = normalHorizontalSpeed;
+        _fastHorizontalSpeed = sprintHorizontalSpeed;
+        _normalVerticalSpeed = normalVerticalSpeed;
+        _fastVerticalSpeed = sprintVerticalSpeed;
     }
-    
+
     public override float VerticalMoveSpeed
     {
         get
@@ -28,11 +27,11 @@ public class GlideFlyLocomotion : BaseFlyLocomotion
             switch (LocomotionComposition.CurrentLocomotionMoveSpeedType.Value)
             {
                 case LocomotionMoveSpeedType.Normal:
-                    return _normalVerticalSpeed;
+                    return LocomotionComposition.VerticalInputMagnitude * _normalVerticalSpeed;
                 case LocomotionMoveSpeedType.Sprint:
-                    return _fastVerticalSpeed;
+                    return LocomotionComposition.VerticalInputMagnitude * _fastVerticalSpeed;
                 case LocomotionMoveSpeedType.Slow:
-                    return _normalVerticalSpeed;
+                    return LocomotionComposition.VerticalInputMagnitude * _normalVerticalSpeed;
             }
 
             Debug.LogException(new ArgumentException());
@@ -66,11 +65,11 @@ public class GlideFlyLocomotion : BaseFlyLocomotion
             .CurrentLocomotionType
             .Subscribe(type =>
             {
-                _glideDisposable.Clear();
+                _flyDisposable.Clear();
 
-                if(type == LocomotionType.Fly)
+                if (type == LocomotionType.Fly)
                 {
-                    StartGlide();
+                    StartFly();
                 }
             })
             .AddTo(_disposable);
@@ -79,27 +78,29 @@ public class GlideFlyLocomotion : BaseFlyLocomotion
     public override void Disable()
     {
         base.Disable();
-        _glideDisposable.Clear();
     }
 
-    private void StartGlide()
+    private void StartFly()
     {
         LocomotionComposition.MoveVelocity.y = 0f;
 
         Observable
-            .EveryUpdate()
-            .Subscribe(_ =>
-            {
-                VerticalMove();
-                HorizontalMove();
-            })
-            .AddTo(_glideDisposable);
+       .EveryUpdate()
+       .Subscribe(_ =>
+       {
+           VerticalMove();
+           HorizontalMove();
+       })
+       .AddTo(_flyDisposable);
     }
 
     private void VerticalMove()
     {
-        Vector3 velocity = Vector3.up * VerticalMoveSpeed;
-        CharacterController.Move(velocity * Time.deltaTime);
+        if (Input.Direction.y != 0f)
+        {
+            Vector3 velocity = LocomotionComposition.VerticalInputMagnitude * VerticalMoveSpeed * new Vector3(0f, Input.Direction.normalized.y, 0f);
+            CharacterController.Move(velocity * Time.deltaTime);
+        }
     }
 
     private void HorizontalMove()
@@ -113,4 +114,3 @@ public class GlideFlyLocomotion : BaseFlyLocomotion
         }
     }
 }
-

@@ -6,7 +6,6 @@ public class InitialPlayerLocomotionProvider : MonoBehaviour
     [SerializeField] private float _groundRunSpeed;
     [SerializeField] private float _groundSprintSpeed;
     [SerializeField] private float _groundSneakSpeed;
-    [SerializeField] private float _groundRotationSpeed;
 
     [SerializeField] private float _fallVerticalSpeed;
     [SerializeField] private float _fallHorizontalSpeed;
@@ -21,20 +20,24 @@ public class InitialPlayerLocomotionProvider : MonoBehaviour
     {
         LocomotionComposition locomotionComposition = GetComponent<LocomotionComposition>();
 
-        DefaultGroundLocomotion _defaultGroundLocomotion = new DefaultGroundLocomotion(_groundRunSpeed, _groundSprintSpeed, _groundSneakSpeed, _groundRotationSpeed);
-        DefaultFallLocomotion _defaultFallLocomotion = new DefaultFallLocomotion(_fallVerticalSpeed, _fallHorizontalSpeed, _fallRotationSpeed);
+        DefaultGroundLocomotion _defaultGroundLocomotion = new DefaultGroundLocomotion(_groundRunSpeed, _groundSprintSpeed, _groundSneakSpeed);
+        DefaultFallLocomotion _defaultFallLocomotion = new DefaultFallLocomotion(_fallVerticalSpeed, _fallHorizontalSpeed);
         DefaultJumpLocomotion _defaultJumpLocomotion = new DefaultJumpLocomotion(_jumpSpeed, _jumpNormalHorizontalSpeed, _jumpSprintHorizontalSpeed);
+        NoneFlyLocomotion _noneFlyLocomotion = new NoneFlyLocomotion();
 
-        locomotionComposition.ChangeGroundLocomotion(_defaultGroundLocomotion);
-        locomotionComposition.ChangeFallLocomotion(_defaultFallLocomotion);
-        locomotionComposition.ChangeJumpLocomotion(_defaultJumpLocomotion);
+        locomotionComposition.ChangeLocomotion(_defaultGroundLocomotion);
+        locomotionComposition.ChangeLocomotion(_defaultFallLocomotion);
+        locomotionComposition.ChangeLocomotion(_defaultJumpLocomotion);
+        locomotionComposition.ChangeLocomotion(_noneFlyLocomotion);
 
+        //FreeFlyLocomotion _freeFlyLocomotion = new FreeFlyLocomotion(3f, 6f, 3f, 6f);
+        //locomotionComposition.ChangeLocomotion(_freeFlyLocomotion);
 
-        //GlideFallLocomotion _glideFallLocomotion = new GlideFallLocomotion(-4f, -6f, 4f, 9f, -9.8f, 3f, _fallRotationSpeed);
-        //locomotionComposition.ChangeFallLocomotion(_glideFallLocomotion);
+        //GlideFlyLocomotion _glideFlyLocomotion = new GlideFlyLocomotion(-3f, -5f, 2f, 6f);
+        //locomotionComposition.ChangeLocomotion(_glideFlyLocomotion);
 
-        MultiJumpLocomotion _multiJumpLocomotion = new MultiJumpLocomotion(_jumpSpeed, _jumpNormalHorizontalSpeed, _jumpSprintHorizontalSpeed, 1);
-        locomotionComposition.ChangeJumpLocomotion(_multiJumpLocomotion);
+        //MultiJumpLocomotion _multiJumpLocomotion = new MultiJumpLocomotion(_jumpSpeed, _jumpNormalHorizontalSpeed, _jumpSprintHorizontalSpeed, 1);
+        //locomotionComposition.ChangeLocomotion(_multiJumpLocomotion);
 
         Destroy(this);
     }

@@ -21,7 +21,7 @@ public class MultiJumpLocomotion : DefaultJumpLocomotion
            {
                if (type == LocomotionType.Jump)
                {
-                   if (LocomotionComposition.GroundDetector.IsGrounded == false)
+                   if (LocomotionComposition.GroundDetector.IsGrounded.Value == false)
                    {
                        if (_remainingJumps > 0)
                        {

@@ -21,13 +21,14 @@ public abstract class BaseLocomotion
     {
         LocomotionComposition = locomotionComposition;
     }
-    public abstract void Disable();
+
+    public virtual void Disable() => _disposable.Clear();
 
     protected void RotateTowardsMove()
     {
-        if(Input.Direction != Vector3.zero)
+        if(Input.Direction.x != 0 && Input.Direction.z != 0)
         {
-            Quaternion rotation = Quaternion.LookRotation(Input.Direction);
+            Quaternion rotation = Quaternion.LookRotation(new Vector3(Input.Direction.x, 0f, Input.Direction.z));
             Transform.rotation = Quaternion.RotateTowards(Transform.rotation, rotation, TOWARDS_MOVE_ROTATION_SPEED * Time.deltaTime);
         }
     }

@@ -7,16 +7,14 @@ public class DefaultGroundLocomotion : BaseGroundLocomotion
     private float _jogSpeed;
     private float _sprintSpeed;
     private float _sneakSpeed;
-    private float _rotationSpeed;
     
     private readonly CompositeDisposable _moveDisposable = new CompositeDisposable();
 
-    public DefaultGroundLocomotion(float jogSpeed, float sprintSpeed, float sneakSpeed, float rotationSpeed)
+    public DefaultGroundLocomotion(float jogSpeed, float sprintSpeed, float sneakSpeed)
     {
         _jogSpeed = jogSpeed;
         _sprintSpeed = sprintSpeed;
         _sneakSpeed = sneakSpeed;
-        _rotationSpeed = rotationSpeed;
     }
 
     public override float VerticalMoveSpeed => 0f;
@@ -59,7 +57,7 @@ public class DefaultGroundLocomotion : BaseGroundLocomotion
 
     public override void Disable()
     {
-        _disposable.Clear();
+        base.Disable();
         _moveDisposable.Clear();
     }
 
@@ -75,13 +73,12 @@ public class DefaultGroundLocomotion : BaseGroundLocomotion
     {
         if (Input.Direction != Vector3.zero)
         {
-            if (CharacterController.isGrounded == true)
+            if (LocomotionComposition.GroundDetector.IsGrounded.Value == true)
             {
                 Vector3 velocity = LocomotionComposition.HorizontalInputMagnitude * HorizontalMoveSpeed * Input.Direction.normalized;
                 CharacterController.Move(velocity * Time.deltaTime);
 
-                Quaternion rotation = Quaternion.LookRotation(Input.Direction);
-                Transform.rotation = Quaternion.RotateTowards(Transform.rotation, rotation, _rotationSpeed * Time.deltaTime);
+                RotateTowardsMove();
             }
         }
     }

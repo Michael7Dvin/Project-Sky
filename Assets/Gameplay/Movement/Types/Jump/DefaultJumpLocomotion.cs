@@ -30,10 +30,10 @@ public class DefaultJumpLocomotion : BaseJumpLocomotion
             .Subscribe(type =>
             {
                 _horizontalMoveDisposable.Clear();
-                
+
                 if (type == LocomotionType.Jump)
                 {
-                    if(LocomotionComposition.GroundDetector.IsGrounded == true)
+                    if(LocomotionComposition.GroundDetector.IsGrounded.Value == true)
                     {
                         Jump();
                     }
@@ -46,7 +46,7 @@ public class DefaultJumpLocomotion : BaseJumpLocomotion
 
     public override void Disable()
     {
-        _disposable.Clear();
+        base.Disable();
         _horizontalMoveDisposable.Clear();
     }
 
@@ -71,7 +71,7 @@ public class DefaultJumpLocomotion : BaseJumpLocomotion
 
     private void HorizontalMove()
     {
-        Vector3 velocity = LocomotionComposition.HorizontalInputMagnitude * HorizontalMoveSpeed * Input.Direction.normalized;
+        Vector3 velocity = LocomotionComposition.HorizontalInputMagnitude * HorizontalMoveSpeed * new Vector3(Input.Direction.normalized.x, 0f, Input.Direction.normalized.z);
         CharacterController.Move(velocity * Time.deltaTime);
 
         RotateTowardsMove();

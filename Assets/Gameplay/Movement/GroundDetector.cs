@@ -1,12 +1,14 @@
 using UnityEngine;
+using UniRx;
 
 [RequireComponent(typeof(Rigidbody))]
 public class GroundDetector : MonoBehaviour
 {
     [SerializeField] private LayerMask _groundLayerMask;
     private Rigidbody _rigidbody;
+    private readonly ReactiveProperty<bool> _isGrounded = new ReactiveProperty<bool>();
 
-    public bool IsGrounded { get; private set; }
+    public IReadOnlyReactiveProperty<bool> IsGrounded => _isGrounded;
 
     private void Awake()
     {
@@ -14,11 +16,16 @@ public class GroundDetector : MonoBehaviour
         _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
     }
 
+    private void Update()
+    {
+        Debug.Log(IsGrounded);
+    }
+
     private void OnCollisionStay(Collision collision)
     {
         if (((1 << collision.gameObject.layer) & _groundLayerMask) != 0)
         {
-            IsGrounded = true;
+            _isGrounded.Value = true;
         }
     }
 
@@ -26,7 +33,7 @@ public class GroundDetector : MonoBehaviour
     {
         if (((1 << collision.gameObject.layer) & _groundLayerMask) != 0)
         {
-            IsGrounded = false;
+            _isGrounded.Value = false;
         }
     }
 }

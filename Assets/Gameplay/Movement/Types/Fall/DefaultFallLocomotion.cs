@@ -5,15 +5,14 @@ public class DefaultFallLocomotion : BaseFallLocomotion
 {
     private readonly float _verticalSpeed;
     private readonly float _horizontalSpeed;
-    private readonly float _rotationSpeed;
 
     private readonly CompositeDisposable _horizontalMoveDisposable = new CompositeDisposable();
+    private readonly CompositeDisposable _verticalMoveDisposable = new CompositeDisposable();
 
-    public DefaultFallLocomotion(float verticalSpeed, float horizontalSpeed, float rotationSpeed) 
+    public DefaultFallLocomotion(float verticalSpeed, float horizontalSpeed) 
     {
         _verticalSpeed = verticalSpeed;
         _horizontalSpeed = horizontalSpeed;
-        _rotationSpeed = rotationSpeed;
     }
 
     public override float VerticalMoveSpeed => _verticalSpeed;
@@ -23,23 +22,24 @@ public class DefaultFallLocomotion : BaseFallLocomotion
     {
         base.Initialize(locomotionComposition);
 
-        Observable
-            .EveryUpdate()
-            .Subscribe(_ => VerticalMove())
-            .AddTo(_disposable);
+        StartVerticalMove();
 
         LocomotionComposition
             .CurrentLocomotionType
             .Subscribe(type =>
             {
+                _verticalMoveDisposable.Clear();
+
+                if(type != LocomotionType.Fly)
+                {
+                    StartVerticalMove();
+                }
+                
                 _horizontalMoveDisposable.Clear();
 
                 if (type == LocomotionType.Fall)
                 {
-                    Observable
-                    .EveryUpdate()
-                    .Subscribe(_ => Move())
-                    .AddTo(_horizontalMoveDisposable);
+                    StartHorizontalMove();
                 }
             })
             .AddTo(_disposable);
@@ -47,7 +47,7 @@ public class DefaultFallLocomotion : BaseFallLocomotion
 
     public override void Disable()
     {
-        _disposable.Clear();
+        base.Disable();
         _horizontalMoveDisposable.Clear();
     }
 
@@ -57,13 +57,29 @@ public class DefaultFallLocomotion : BaseFallLocomotion
         HorizontalMove();
     }
 
+    private void StartVerticalMove()
+    {
+        Observable
+            .EveryUpdate()
+            .Subscribe(_ => VerticalMove())
+            .AddTo(_verticalMoveDisposable);
+    }
+
+    private void StartHorizontalMove()
+    {
+        Observable
+            .EveryUpdate()
+            .Subscribe(_ => Move())
+            .AddTo(_horizontalMoveDisposable);
+    }
+
     private void VerticalMove()
     {
-        if(LocomotionComposition.MoveVelocity.y > _verticalSpeed)
+        if (LocomotionComposition.MoveVelocity.y > _verticalSpeed)
         {
             LocomotionComposition.MoveVelocity.y += _verticalSpeed * 1.75f * Time.deltaTime;
-            
-            if(LocomotionComposition.MoveVelocity.y < _verticalSpeed)
+
+            if (LocomotionComposition.MoveVelocity.y < _verticalSpeed)
             {
                 LocomotionComposition.MoveVelocity.y = _verticalSpeed;
             }
@@ -77,8 +93,7 @@ public class DefaultFallLocomotion : BaseFallLocomotion
             Vector3 velocity = HorizontalMoveSpeed * Input.Direction.normalized;
             CharacterController.Move(velocity * Time.deltaTime);
 
-            Quaternion rotation = Quaternion.LookRotation(Input.Direction);
-            Transform.rotation = Quaternion.RotateTowards(Transform.rotation, rotation, _rotationSpeed * Time.deltaTime);
+            RotateTowardsMove();
         }
     }
 }

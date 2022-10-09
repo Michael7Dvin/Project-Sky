@@ -37,9 +37,27 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""Vertical Movement"",
+                    ""type"": ""Value"",
+                    ""id"": ""2dbedbcb-e7d3-485a-8d00-8245bc869b93"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Sprint"",
                     ""type"": ""Button"",
                     ""id"": ""4f247db7-42a8-466f-a339-486954ce04d1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Sneak"",
+                    ""type"": ""Button"",
+                    ""id"": ""89412587-2530-416a-8d35-48004d7d21bd"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -55,9 +73,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Sneak"",
+                    ""name"": ""Fly"",
                     ""type"": ""Button"",
-                    ""id"": ""89412587-2530-416a-8d35-48004d7d21bd"",
+                    ""id"": ""e319b081-6833-444b-8bd2-84038df353a9"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -199,6 +217,28 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""7aa842e7-bccf-44fa-b8c9-45e1c97d4e40"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Sneak"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5ee79592-7c6e-4db8-acf1-db817a2ce7cc"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse & Keyboard"",
+                    ""action"": ""Sneak"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""e30f4f65-41ea-4622-af89-2e58a942b336"",
                     ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
@@ -221,25 +261,91 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""7aa842e7-bccf-44fa-b8c9-45e1c97d4e40"",
-                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""id"": ""3fad3da5-2bdc-40c5-8e1e-8f58bfb8d545"",
+                    ""path"": ""<Keyboard>/v"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Sneak"",
+                    ""groups"": ""Mouse & Keyboard"",
+                    ""action"": ""Fly"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""5ee79592-7c6e-4db8-acf1-db817a2ce7cc"",
+                    ""id"": ""d1c8d5ce-2cb1-4177-acda-2d8760e2644e"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Fly"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""427ab1ef-83f5-4990-aaf9-33f528fdbfef"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Vertical Movement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""794d517a-899c-4ce0-aae5-931c60920fc8"",
                     ""path"": ""<Keyboard>/ctrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Mouse & Keyboard"",
-                    ""action"": ""Sneak"",
+                    ""action"": ""Vertical Movement"",
                     ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""0dde8ab8-730e-4a8c-a3eb-623c6f6f3b2d"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse & Keyboard"",
+                    ""action"": ""Vertical Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""17baec4c-f948-4b29-ab66-dc52fc12d004"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Vertical Movement"",
+                    ""isComposite"": true,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""77af23d1-679e-4263-8cc1-4177aee8d70d"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Vertical Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""5bdcea07-c60d-4748-b935-95ad4af51bdb"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Vertical Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -318,7 +424,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""id"": ""cd9fed6b-20ef-4ce4-9988-3e22438fd043"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
-                    ""processors"": ""InvertVector2"",
+                    ""processors"": ""InvertVector2(invertX=false)"",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Orbital Rotation"",
                     ""isComposite"": false,
@@ -371,9 +477,11 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         // Movement
         m_Movement = asset.FindActionMap("Movement", throwIfNotFound: true);
         m_Movement_HorizontalMovement = m_Movement.FindAction("Horizontal Movement", throwIfNotFound: true);
+        m_Movement_VerticalMovement = m_Movement.FindAction("Vertical Movement", throwIfNotFound: true);
         m_Movement_Sprint = m_Movement.FindAction("Sprint", throwIfNotFound: true);
-        m_Movement_Jump = m_Movement.FindAction("Jump", throwIfNotFound: true);
         m_Movement_Sneak = m_Movement.FindAction("Sneak", throwIfNotFound: true);
+        m_Movement_Jump = m_Movement.FindAction("Jump", throwIfNotFound: true);
+        m_Movement_Fly = m_Movement.FindAction("Fly", throwIfNotFound: true);
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_OrbitalRotation = m_Camera.FindAction("Orbital Rotation", throwIfNotFound: true);
@@ -437,17 +545,21 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Movement;
     private IMovementActions m_MovementActionsCallbackInterface;
     private readonly InputAction m_Movement_HorizontalMovement;
+    private readonly InputAction m_Movement_VerticalMovement;
     private readonly InputAction m_Movement_Sprint;
-    private readonly InputAction m_Movement_Jump;
     private readonly InputAction m_Movement_Sneak;
+    private readonly InputAction m_Movement_Jump;
+    private readonly InputAction m_Movement_Fly;
     public struct MovementActions
     {
         private @PlayerInput m_Wrapper;
         public MovementActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @HorizontalMovement => m_Wrapper.m_Movement_HorizontalMovement;
+        public InputAction @VerticalMovement => m_Wrapper.m_Movement_VerticalMovement;
         public InputAction @Sprint => m_Wrapper.m_Movement_Sprint;
-        public InputAction @Jump => m_Wrapper.m_Movement_Jump;
         public InputAction @Sneak => m_Wrapper.m_Movement_Sneak;
+        public InputAction @Jump => m_Wrapper.m_Movement_Jump;
+        public InputAction @Fly => m_Wrapper.m_Movement_Fly;
         public InputActionMap Get() { return m_Wrapper.m_Movement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -460,15 +572,21 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @HorizontalMovement.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnHorizontalMovement;
                 @HorizontalMovement.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnHorizontalMovement;
                 @HorizontalMovement.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnHorizontalMovement;
+                @VerticalMovement.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnVerticalMovement;
+                @VerticalMovement.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnVerticalMovement;
+                @VerticalMovement.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnVerticalMovement;
                 @Sprint.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnSprint;
                 @Sprint.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnSprint;
                 @Sprint.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnSprint;
-                @Jump.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnJump;
-                @Jump.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnJump;
-                @Jump.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnJump;
                 @Sneak.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnSneak;
                 @Sneak.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnSneak;
                 @Sneak.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnSneak;
+                @Jump.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnJump;
+                @Fly.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnFly;
+                @Fly.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnFly;
+                @Fly.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnFly;
             }
             m_Wrapper.m_MovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -476,15 +594,21 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @HorizontalMovement.started += instance.OnHorizontalMovement;
                 @HorizontalMovement.performed += instance.OnHorizontalMovement;
                 @HorizontalMovement.canceled += instance.OnHorizontalMovement;
+                @VerticalMovement.started += instance.OnVerticalMovement;
+                @VerticalMovement.performed += instance.OnVerticalMovement;
+                @VerticalMovement.canceled += instance.OnVerticalMovement;
                 @Sprint.started += instance.OnSprint;
                 @Sprint.performed += instance.OnSprint;
                 @Sprint.canceled += instance.OnSprint;
-                @Jump.started += instance.OnJump;
-                @Jump.performed += instance.OnJump;
-                @Jump.canceled += instance.OnJump;
                 @Sneak.started += instance.OnSneak;
                 @Sneak.performed += instance.OnSneak;
                 @Sneak.canceled += instance.OnSneak;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
+                @Fly.started += instance.OnFly;
+                @Fly.performed += instance.OnFly;
+                @Fly.canceled += instance.OnFly;
             }
         }
     }
@@ -543,9 +667,11 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     public interface IMovementActions
     {
         void OnHorizontalMovement(InputAction.CallbackContext context);
+        void OnVerticalMovement(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
-        void OnJump(InputAction.CallbackContext context);
         void OnSneak(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
+        void OnFly(InputAction.CallbackContext context);
     }
     public interface ICameraActions
     {

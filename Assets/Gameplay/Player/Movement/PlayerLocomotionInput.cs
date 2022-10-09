@@ -15,7 +15,12 @@ public class PlayerLocomotionInput : LocomotionInput
         _input.Movement.HorizontalMovement.performed += OnHorizontalInput;
         _input.Movement.HorizontalMovement.canceled += OnHorizontalInput;
 
+        _input.Movement.VerticalMovement.started += OnVerticalInput;
+        _input.Movement.VerticalMovement.performed += OnVerticalInput;
+        _input.Movement.VerticalMovement.canceled += OnVerticalInput;
+
         _input.Movement.Jump.started += conext => _currentLocomotionType.SetValueAndForceNotify(LocomotionType.Jump);
+        _input.Movement.Fly.started += context => _currentLocomotionType.SetValueAndForceNotify(LocomotionType.Fly);
 
         _input.Movement.Sprint.started += context => _locomotionMoveSpeedTypeAction.Value = (LocomotionMoveSpeedType.Sprint, true);
         _input.Movement.Sprint.canceled += context => _locomotionMoveSpeedTypeAction.Value = (LocomotionMoveSpeedType.Sprint, false);
@@ -36,5 +41,10 @@ public class PlayerLocomotionInput : LocomotionInput
     {
         _notAlignedToCameraInputDirection = context.ReadValue<Vector2>();
         _notAlignedToCameraInputDirection = new Vector3(_notAlignedToCameraInputDirection.x, 0, _notAlignedToCameraInputDirection.y);
+    }
+
+    private void OnVerticalInput(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        _notAlignedToCameraInputDirection.y = context.ReadValue<float>();
     }
 }

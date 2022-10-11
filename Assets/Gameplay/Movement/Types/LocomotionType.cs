@@ -4,4 +4,5 @@ public enum LocomotionType
     Jump,
     Fall,
     Fly,
+    Dodge,
 }

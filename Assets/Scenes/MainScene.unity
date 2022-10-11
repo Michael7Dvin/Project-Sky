@@ -1632,12 +1632,12 @@ PrefabInstance:
     - target: {fileID: 8960040010838811281, guid: ce5078b6d77061b4d8af2d9f57407e15,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.00000008750083
+      value: 0.000000023452724
       objectReference: {fileID: 0}
     - target: {fileID: 8960040010838811281, guid: ce5078b6d77061b4d8af2d9f57407e15,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000034393
+      value: 0.000000009218308
       objectReference: {fileID: 0}
     - target: {fileID: 8960040010838811281, guid: ce5078b6d77061b4d8af2d9f57407e15,
         type: 3}
@@ -3450,12 +3450,12 @@ PrefabInstance:
     - target: {fileID: 1606363974259678094, guid: 9a3065d802a8f944aba02f220853f038,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.000000071487065
+      value: 0.00000003947344
       objectReference: {fileID: 0}
     - target: {fileID: 1606363974259678094, guid: 9a3065d802a8f944aba02f220853f038,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000028098643
+      value: 0.000000015515393
       objectReference: {fileID: 0}
     - target: {fileID: 1606363974259678094, guid: 9a3065d802a8f944aba02f220853f038,
         type: 3}
@@ -3470,12 +3470,12 @@ PrefabInstance:
     - target: {fileID: 2850056496863347391, guid: 9a3065d802a8f944aba02f220853f038,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.000000071985085
+      value: 0.000000072013066
       objectReference: {fileID: 0}
     - target: {fileID: 2850056496863347391, guid: 9a3065d802a8f944aba02f220853f038,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000026797153
+      value: 0.000000026807566
       objectReference: {fileID: 0}
     - target: {fileID: 2850056496863347391, guid: 9a3065d802a8f944aba02f220853f038,
         type: 3}
@@ -3610,12 +3610,12 @@ PrefabInstance:
     - target: {fileID: 6463420006802134553, guid: 9a3065d802a8f944aba02f220853f038,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.0000000387282
+      value: 0.000000059136482
       objectReference: {fileID: 0}
     - target: {fileID: 6463420006802134553, guid: 9a3065d802a8f944aba02f220853f038,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000016041744
+      value: 0.000000024495135
       objectReference: {fileID: 0}
     - target: {fileID: 6463420006802134553, guid: 9a3065d802a8f944aba02f220853f038,
         type: 3}
@@ -3625,7 +3625,7 @@ PrefabInstance:
     - target: {fileID: 6463420006802134553, guid: 9a3065d802a8f944aba02f220853f038,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.38268343
+      value: -0.3826835
       objectReference: {fileID: 0}
     - target: {fileID: 7023311044539451704, guid: 9a3065d802a8f944aba02f220853f038,
         type: 3}
@@ -5375,8 +5375,9 @@ GameObject:
   - component: {fileID: 1507438166}
   - component: {fileID: 7567991311920024848}
   - component: {fileID: 7567991311920024847}
-  - component: {fileID: 7567991311920024849}
   - component: {fileID: 7567991311920024850}
+  - component: {fileID: 7567991311920024851}
+  - component: {fileID: 7567991311920024852}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -5483,18 +5484,6 @@ MonoBehaviour:
   MoveVelocity: {x: 0, y: 0, z: 0}
   _input: {fileID: 7567991311920024847}
   _groundDetector: {fileID: 1563760846}
---- !u!114 &7567991311920024849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7083380103673812913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a47895f2de2358841acffbdccb5f71dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7567991311920024850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5507,15 +5496,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05a39a8472ae3874dbbcb23efe38c220, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _groundRunSpeed: 3
+  _groundJogSpeed: 3
   _groundSprintSpeed: 6
   _groundSneakSpeed: 1.5
-  _fallVerticalSpeed: -9.8
   _fallHorizontalSpeed: 2
   _fallRotationSpeed: 400
   _jumpSpeed: 7
   _jumpNormalHorizontalSpeed: 3
   _jumpSprintHorizontalSpeed: 6
+  _jumpAdditionalJumps: 2
+--- !u!114 &7567991311920024851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7083380103673812913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ca06a5385efae743ab1b7ca462822c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!54 &7567991311920024852
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7083380103673812913}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 1
 --- !u!4 &7608617300469965662
 Transform:
   m_ObjectHideFlags: 0

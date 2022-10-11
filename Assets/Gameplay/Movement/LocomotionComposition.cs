@@ -7,21 +7,21 @@ public class LocomotionComposition : MonoBehaviour
 {
     public Vector3 MoveVelocity;
 
-    private ReactiveProperty<LocomotionType> _currentLocomotionType = new ReactiveProperty<LocomotionType>();
-    private ReactiveProperty<LocomotionMoveSpeedType> _currentLocomotionMoveSpeedType = new ReactiveProperty<LocomotionMoveSpeedType>();
+    private readonly ReactiveProperty<LocomotionType> _currentLocomotionType = new ReactiveProperty<LocomotionType>();
+    private readonly ReactiveProperty<LocomotionMoveSpeedType> _currentLocomotionMoveSpeedType = new ReactiveProperty<LocomotionMoveSpeedType>();
+
+    private readonly ReactiveProperty<BaseGroundLocomotion> _ground = new ReactiveProperty<BaseGroundLocomotion>();
+    private readonly ReactiveProperty<BaseFallLocomotion> _fall = new ReactiveProperty<BaseFallLocomotion>();
+    private readonly ReactiveProperty<BaseJumpLocomotion> _jump = new ReactiveProperty<BaseJumpLocomotion>();
+    private readonly ReactiveProperty<BaseFlyLocomotion> _fly = new ReactiveProperty<BaseFlyLocomotion>();
+    private readonly ReactiveProperty<BaseDodgeLocomotion> _dodge = new ReactiveProperty<BaseDodgeLocomotion>();
 
     [SerializeField] private LocomotionInput _input;
+    [SerializeField] private GroundDetector _groundDetector;
 
     private readonly CompositeDisposable _disposable = new CompositeDisposable();
     private readonly CompositeDisposable _fallingObserveDisposable = new CompositeDisposable();
     private readonly CompositeDisposable _landingObserveDisposable = new CompositeDisposable();
-
-    public BaseGroundLocomotion Ground { get; private set; }
-    public BaseFallLocomotion Fall { get; private set; }
-    public BaseJumpLocomotion Jump { get; private set; }
-    public BaseFlyLocomotion Fly { get; private set; }
-
-    [SerializeField] private GroundDetector _groundDetector;
 
     public float HorizontalInputMagnitude
     {
@@ -42,9 +42,9 @@ public class LocomotionComposition : MonoBehaviour
             switch (_currentLocomotionType.Value)
             {
                 case LocomotionType.Ground:
-                    return Ground.VerticalMoveSpeed;
+                    return _ground.Value.VerticalMoveSpeed;
                 case LocomotionType.Fall:
-                    return Fall.VerticalMoveSpeed;
+                    return _fall.Value.VerticalMoveSpeed;
             }
             return 0f;
         }
@@ -56,21 +56,25 @@ public class LocomotionComposition : MonoBehaviour
             switch(_currentLocomotionType.Value)
             {
                 case LocomotionType.Ground:
-                    return Ground.HorizontalMoveSpeed;
+                    return _ground.Value.HorizontalMoveSpeed;
                 case LocomotionType.Fall:
-                    return Fall.HorizontalMoveSpeed;
+                    return _fall.Value.HorizontalMoveSpeed;
             }
             return 0f;
         }
     }
 
-    public Vector3 CharacterVelocity => CharacterController.velocity;
-
     public IReadOnlyReactiveProperty<LocomotionType> CurrentLocomotionType => _currentLocomotionType;
     public IReadOnlyReactiveProperty<LocomotionMoveSpeedType> CurrentLocomotionMoveSpeedType => _currentLocomotionMoveSpeedType;
+   
+    public IReadOnlyReactiveProperty<BaseGroundLocomotion> Ground => _ground;
+    public IReadOnlyReactiveProperty<BaseFallLocomotion> Fall => _fall;
+    public IReadOnlyReactiveProperty<BaseJumpLocomotion> Jump => _jump;
+    public IReadOnlyReactiveProperty<BaseFlyLocomotion> Fly => _fly;
+    public IReadOnlyReactiveProperty<BaseDodgeLocomotion> Dodge => _dodge;
 
-    public LocomotionInput Input => _input;
     public CharacterController CharacterController { get; private set; }
+    public LocomotionInput Input => _input;
     public GroundDetector GroundDetector => _groundDetector;
 
     private void Awake() => CharacterController = GetComponent<CharacterController>();
@@ -85,6 +89,7 @@ public class LocomotionComposition : MonoBehaviour
             .LocomotionMoveSpeedTypeAction
             .Subscribe(action => OnInputLocomotionMoveSpeedAction(action.Item1, action.Item2))
             .AddTo(_disposable);
+
 
         GroundDetector
             .IsGrounded
@@ -102,14 +107,12 @@ public class LocomotionComposition : MonoBehaviour
             })
             .AddTo(_disposable);
 
+        // Procedural cohesion - CharacterController.Move subscribe should be last, otherwise CharacterController.velocty returns incorrect results
         Observable
             .EveryUpdate()
-            .Subscribe(_ =>
-            {
-                CharacterController.Move(MoveVelocity * Time.deltaTime);
-                Debug.Log(CharacterVelocity.y);
-            })
+            .Subscribe(_ => CharacterController.Move(MoveVelocity * Time.deltaTime))
             .AddTo(_disposable);
+
 
         void ObserveFalling()
         {
@@ -117,7 +120,7 @@ public class LocomotionComposition : MonoBehaviour
                 .EveryUpdate()
                 .Subscribe(_ =>
                 {
-                    if (Mathf.Abs(CharacterVelocity.y - Fall.VerticalMoveSpeed) < 1)
+                    if (Mathf.Abs(CharacterController.velocity.y - _fall.Value.VerticalMoveSpeed) < 1)
                     {
                         if (_currentLocomotionType.Value == LocomotionType.Ground || _currentLocomotionType.Value == LocomotionType.Jump)
                         {
@@ -133,17 +136,10 @@ public class LocomotionComposition : MonoBehaviour
             Observable
                 .EveryUpdate()
                 .Subscribe(_ =>
-                {
-                    if (CharacterVelocity.y <= 0 && GroundDetector.IsGrounded.Value == true && _currentLocomotionType.Value != LocomotionType.Ground)
+                {                    
+                    if (MoveVelocity.y <= 0 && GroundDetector.IsGrounded.Value == true && _currentLocomotionType.Value != LocomotionType.Ground)
                     {
                         if (_currentLocomotionType.Value == LocomotionType.Jump || _currentLocomotionType.Value == LocomotionType.Fall)
-                        {
-                            _currentLocomotionType.Value = LocomotionType.Ground;
-                            _landingObserveDisposable.Clear();
-                            return;
-                        }
-
-                        if (_currentLocomotionType.Value == LocomotionType.Fly && Fly.GetType() == typeof(GlideFlyLocomotion))
                         {
                             _currentLocomotionType.Value = LocomotionType.Ground;
                             _landingObserveDisposable.Clear();
@@ -152,9 +148,8 @@ public class LocomotionComposition : MonoBehaviour
                     }
                 })
                 .AddTo(_landingObserveDisposable);
-
-            
         }
+
     }
 
     private void OnDisable() => _disposable.Clear();
@@ -168,9 +163,8 @@ public class LocomotionComposition : MonoBehaviour
             return;
         }
 
-        Ground?.Disable();
-        Ground = groundLocomotion;
-        Ground.Initialize(this);
+        _ground.Value = groundLocomotion;
+        _ground.Value.Initialize(this);
     }
     public void ChangeLocomotion(BaseFallLocomotion fallLocomotion)
     {
@@ -180,9 +174,8 @@ public class LocomotionComposition : MonoBehaviour
             return;
         }
 
-        Fall?.Disable();
-        Fall = fallLocomotion;
-        Fall.Initialize(this);
+        _fall.Value = fallLocomotion;
+        _fall.Value.Initialize(this);
     }
     public void ChangeLocomotion(BaseJumpLocomotion jumpLocomotion)
     {
@@ -192,9 +185,8 @@ public class LocomotionComposition : MonoBehaviour
             return;
         }
 
-        Jump?.Disable();
-        Jump = jumpLocomotion;
-        Jump.Initialize(this);
+        _jump.Value = jumpLocomotion;
+        _jump.Value.Initialize(this);
     }
     public void ChangeLocomotion(BaseFlyLocomotion flyLocomotion)
     {
@@ -204,9 +196,19 @@ public class LocomotionComposition : MonoBehaviour
             return;
         }
 
-        Fly?.Disable();
-        Fly = flyLocomotion;
-        Fly.Initialize(this);
+        _fly.Value = flyLocomotion;
+        _fly.Value.Initialize(this);
+    }
+    public void ChangeLocomotion(BaseDodgeLocomotion dodgeLocomotion)
+    {
+        if (dodgeLocomotion == null)
+        {
+            Debug.Log(new ArgumentException());
+            return;
+        }
+
+        _dodge.Value = dodgeLocomotion;
+        _dodge.Value.Initialize(this);
     }
 
     private void OnInputLocomotionType(LocomotionType type)
@@ -225,19 +227,22 @@ public class LocomotionComposition : MonoBehaviour
             case LocomotionType.Fly:
                 OnFlyLocomotion();
                 return;
+            case LocomotionType.Dodge:
+                OnDodgeLocomotion();//
+                return;
         }
 
         void OnGroundLocomotion()
         {
-            _currentLocomotionType.Value = LocomotionType.Ground;
+            _currentLocomotionType.Value = type;
         }
         void OnFallLocomotion()
         {
-            _currentLocomotionType.Value = LocomotionType.Fall;
+            _currentLocomotionType.Value = type;
         }
         void OnJumpLocomotion()
         {
-            if(Jump.GetType() == typeof(NoneJumpLocomotion))
+            if(Jump.Value.GetType() == typeof(NoneJumpLocomotion))
             {
                 return;
             }
@@ -247,11 +252,11 @@ public class LocomotionComposition : MonoBehaviour
                 return;
             }
 
-            _currentLocomotionType.Value = LocomotionType.Jump;
+            _currentLocomotionType.SetValueAndForceNotify(type);
         }
         void OnFlyLocomotion()
         {
-            if (Fly.GetType() == typeof(NoneFlyLocomotion))
+            if (Fly.Value.GetType() == typeof(NoneFlyLocomotion))
             {
                 return;
             }
@@ -262,7 +267,16 @@ public class LocomotionComposition : MonoBehaviour
                 return;
             }
 
-            _currentLocomotionType.Value = LocomotionType.Fly;
+            _currentLocomotionType.Value = type;
+        }
+        void OnDodgeLocomotion()
+        {
+            if (Dodge.Value.GetType() == typeof(NoneDodgeLocomotion))
+            {
+                return;
+            }
+
+            _currentLocomotionType.Value = type;
         }
     }
     private void OnInputLocomotionMoveSpeedAction(LocomotionMoveSpeedType type, bool status)

@@ -11,11 +11,13 @@ public abstract class BaseLocomotion
     public abstract float VerticalMoveSpeed { get; }
     public abstract float HorizontalMoveSpeed { get; }
 
-    protected Transform Transform => LocomotionComposition.transform;
-
     protected LocomotionComposition LocomotionComposition { get; private set; }
+    protected Transform Transform => LocomotionComposition.transform;
+    protected IReadOnlyReactiveProperty<LocomotionType> CurrentLocomotionType => LocomotionComposition.CurrentLocomotionType;
+
     protected LocomotionInput Input => LocomotionComposition.Input;
     protected CharacterController CharacterController => LocomotionComposition.CharacterController;
+    protected GroundDetector GroundDetector => LocomotionComposition.GroundDetector;
 
     public virtual void Initialize(LocomotionComposition locomotionComposition)
     {

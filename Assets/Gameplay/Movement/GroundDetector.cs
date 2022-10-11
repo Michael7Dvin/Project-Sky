@@ -16,11 +16,6 @@ public class GroundDetector : MonoBehaviour
         _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
     }
 
-    private void Update()
-    {
-        Debug.Log(IsGrounded);
-    }
-
     private void OnCollisionStay(Collision collision)
     {
         if (((1 << collision.gameObject.layer) & _groundLayerMask) != 0)

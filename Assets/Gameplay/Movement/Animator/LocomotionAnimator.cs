@@ -2,61 +2,30 @@ using UnityEngine;
 using UniRx;
 
 [RequireComponent(typeof(Animator), typeof(LocomotionComposition))]
-public class LocomotionAnimator : MonoBehaviour
+public abstract class LocomotionAnimator : MonoBehaviour
 {
-    private Animator _animator;
-    private LocomotionComposition _locomotionComposition;
-
     private readonly CompositeDisposable _disposable = new CompositeDisposable();
+    
+    protected Animator Animator { get; private set; }
+    protected LocomotionComposition LocomotionComposition { get; private set; }
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
-        _locomotionComposition = GetComponent<LocomotionComposition>();
+        Animator = GetComponent<Animator>();
+        LocomotionComposition = GetComponent<LocomotionComposition>();
     }
 
     private void OnEnable()
     {
-                _locomotionComposition
+        LocomotionComposition
             .CurrentLocomotionMoveSpeedType
-            .Subscribe(state =>
-            {
-                switch (state)
-                {
-                    case LocomotionMoveSpeedType.Normal:
-                        _animator.SetBool("LocomotionIsSprinting", false);
-                        _animator.SetBool("LocomotionIsSlow", false);
-                        break;
-                    case LocomotionMoveSpeedType.Sprint:
-                        _animator.SetBool("LocomotionIsSprinting", true);
-                        _animator.SetBool("LocomotionIsSlow", false);
-                        break;
-                    case LocomotionMoveSpeedType.Slow:
-                        _animator.SetBool("LocomotionIsSlow", true);
-                        _animator.SetBool("LocomotionIsSprinting", false);
-                        break;
-                }
+            .Subscribe(type => OnLocomotionMoveSpeedTypeChanged(type))
+            .AddTo(_disposable);
 
-            }).AddTo(_disposable);
-
-        _locomotionComposition
+        LocomotionComposition
             .CurrentLocomotionType
-            .Subscribe(type =>
-            {
-                switch (type)
-                {
-                    case LocomotionType.Ground:
-                        _animator.SetBool("LocomotionIsFalling", false);
-                        break;
-                    case LocomotionType.Fall:
-                        _animator.SetBool("LocomotionIsFalling", true);
-                        break;
-                    case LocomotionType.Jump:
-                        _animator.SetBool("LocomotionIsFalling", true);
-                        break;
-                }
-
-            }).AddTo(_disposable);
+            .Subscribe(type => OnLocomotionTypeChanged(type))
+            .AddTo(_disposable);
     }
 
     private void OnDisable() => _disposable.Dispose();
@@ -67,22 +36,26 @@ public class LocomotionAnimator : MonoBehaviour
         SetLocomotionVerticalVelocity();
     }
 
+    protected abstract void OnLocomotionMoveSpeedTypeChanged(LocomotionMoveSpeedType type);
+    protected abstract void OnLocomotionTypeChanged(LocomotionType type);
+
     private void SetLocomotionHorizontalVelocity()
     {
-        if (float.IsNaN(_locomotionComposition.CharacterVelocity.magnitude / _locomotionComposition.CurrentHorizontalMoveSpeed))
+        if (float.IsNaN(LocomotionComposition.CharacterController.velocity.magnitude / LocomotionComposition.CurrentHorizontalMoveSpeed))
         {
             float velocity = 0f;
-            _animator.SetFloat("LocomotionHorizontalVelocity", velocity, 0.3f, Time.deltaTime);
+            Animator.SetFloat("LocomotionHorizontalVelocity", velocity, 0.3f, Time.deltaTime);
         }
         else
         {
-            float velocity = Mathf.Clamp01(_locomotionComposition.CharacterVelocity.magnitude / _locomotionComposition.CurrentHorizontalMoveSpeed); 
-            _animator.SetFloat("LocomotionHorizontalVelocity", velocity, 0.3f, Time.deltaTime);
+            float velocity = Mathf.Clamp01(LocomotionComposition.CharacterController.velocity.magnitude / LocomotionComposition.CurrentHorizontalMoveSpeed); 
+            Animator.SetFloat("LocomotionHorizontalVelocity", velocity, 0.3f, Time.deltaTime);
         }
     }
 
     private void SetLocomotionVerticalVelocity()
     {
-
+        float velocity = LocomotionComposition.CharacterController.velocity.magnitude;
+        Animator.SetFloat("LocomotionVerticalVelocity", velocity, 0.3f, Time.deltaTime);
     }
 }

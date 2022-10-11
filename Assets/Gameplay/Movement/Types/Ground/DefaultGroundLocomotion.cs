@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class DefaultGroundLocomotion : BaseGroundLocomotion
 {
-    private float _jogSpeed;
-    private float _sprintSpeed;
-    private float _sneakSpeed;
+    private readonly float _jogSpeed;
+    private readonly float _sprintSpeed;
+    private readonly float _sneakSpeed;
     
     private readonly CompositeDisposable _moveDisposable = new CompositeDisposable();
 
@@ -67,18 +67,18 @@ public class DefaultGroundLocomotion : BaseGroundLocomotion
         .EveryUpdate()
         .Subscribe(_ => Move())
         .AddTo(_moveDisposable);
-    }
 
-    private void Move()
-    {
-        if (Input.Direction != Vector3.zero)
+        void Move()
         {
-            if (LocomotionComposition.GroundDetector.IsGrounded.Value == true)
+            if (Input.Direction != Vector3.zero)
             {
-                Vector3 velocity = LocomotionComposition.HorizontalInputMagnitude * HorizontalMoveSpeed * Input.Direction.normalized;
-                CharacterController.Move(velocity * Time.deltaTime);
+                if (LocomotionComposition.GroundDetector.IsGrounded.Value == true)
+                {
+                    Vector3 velocity = LocomotionComposition.HorizontalInputMagnitude * HorizontalMoveSpeed * Input.Direction.normalized;
+                    CharacterController.Move(velocity * Time.deltaTime);
 
-                RotateTowardsMove();
+                    RotateTowardsMove();
+                }
             }
         }
     }

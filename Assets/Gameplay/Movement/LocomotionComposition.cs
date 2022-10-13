@@ -35,20 +35,7 @@ public class LocomotionComposition : MonoBehaviour
     }
     public float VerticalInputMagnitude => Mathf.Clamp01(Mathf.Abs(_input.Direction.y));
 
-    public float CurrentVerticalMoveSpeed
-    {
-        get
-        {
-            switch (_currentLocomotionType.Value)
-            {
-                case LocomotionType.Ground:
-                    return _ground.Value.VerticalMoveSpeed;
-                case LocomotionType.Fall:
-                    return _fall.Value.VerticalMoveSpeed;
-            }
-            return 0f;
-        }
-    }
+    public float CurrentVerticalMoveSpeed => _fall.Value.VerticalMoveSpeed;
     public float CurrentHorizontalMoveSpeed
     {
         get
@@ -89,7 +76,6 @@ public class LocomotionComposition : MonoBehaviour
             .LocomotionMoveSpeedTypeAction
             .Subscribe(action => OnInputLocomotionMoveSpeedAction(action.Item1, action.Item2))
             .AddTo(_disposable);
-
 
         GroundDetector
             .IsGrounded
@@ -228,7 +214,7 @@ public class LocomotionComposition : MonoBehaviour
                 OnFlyLocomotion();
                 return;
             case LocomotionType.Dodge:
-                OnDodgeLocomotion();//
+                OnDodgeLocomotion();
                 return;
         }
 
@@ -247,7 +233,7 @@ public class LocomotionComposition : MonoBehaviour
                 return;
             }
                     
-            if(_currentLocomotionType.Value == LocomotionType.Fly)
+            if(_currentLocomotionType.Value == LocomotionType.Fly || _currentLocomotionType.Value == LocomotionType.Dodge)
             {
                 return;
             }
@@ -276,7 +262,26 @@ public class LocomotionComposition : MonoBehaviour
                 return;
             }
 
+            if (GroundDetector.IsGrounded.Value == false)
+            {
+                return;
+            }
+
             _currentLocomotionType.Value = type;
+
+            CompositeDisposable _onRollCompletedDisposable = new CompositeDisposable();
+
+            _dodge
+                .Value
+                .RollCompleted
+                .Subscribe(_ => OnRollCompleted())
+                .AddTo(_onRollCompletedDisposable);
+
+            void OnRollCompleted()
+            {
+                _currentLocomotionType.Value = LocomotionType.Ground;
+                _onRollCompletedDisposable.Dispose();
+            }
         }
     }
     private void OnInputLocomotionMoveSpeedAction(LocomotionMoveSpeedType type, bool status)

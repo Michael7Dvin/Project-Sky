@@ -55,7 +55,7 @@ public abstract class LocomotionAnimator : MonoBehaviour
 
     private void SetLocomotionVerticalVelocity()
     {
-        float velocity = LocomotionComposition.CharacterController.velocity.magnitude;
+        float velocity = LocomotionComposition.CharacterController.velocity.y;
         Animator.SetFloat("LocomotionVerticalVelocity", velocity, 0.3f, Time.deltaTime);
     }
 }

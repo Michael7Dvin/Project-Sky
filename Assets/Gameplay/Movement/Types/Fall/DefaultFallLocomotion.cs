@@ -6,8 +6,6 @@ public class DefaultFallLocomotion : BaseFallLocomotion
     private const float FREE_FALL_VERTICAL_MAX_SPEED = -50f;
     private const float CONSTANT_VERTICAL_SPEED = -9.8f;
 
-    private float _currentVerticalSpeed = CONSTANT_VERTICAL_SPEED;
-
     private readonly float _horizontalSpeed;
 
     private readonly CompositeDisposable _horizontalMoveDisposable = new CompositeDisposable();

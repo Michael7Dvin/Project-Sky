@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 22cd8fcce4b9f954ab807a1460242e34
+guid: a247107786d7c804588caaf51ea45903
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Landing Flat
+    second: Jogging
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -36,18 +36,18 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Landing Flat
+      name: Jogging
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 46
+      lastFrame: 22
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0

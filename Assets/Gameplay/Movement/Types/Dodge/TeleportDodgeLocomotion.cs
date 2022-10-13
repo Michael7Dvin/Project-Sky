@@ -1,18 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TeleportDodgeLocomotion : MonoBehaviour
+public class TeleportDodgeLocomotion : BaseDodgeLocomotion
 {
-    // Start is called before the first frame update
-    void Start()
+    public TeleportDodgeLocomotion(float rollDuration) : base(rollDuration)
     {
-        
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public override float VerticalMoveSpeed => throw new System.NotImplementedException();
+
+    public override float HorizontalMoveSpeed => throw new System.NotImplementedException();
 }

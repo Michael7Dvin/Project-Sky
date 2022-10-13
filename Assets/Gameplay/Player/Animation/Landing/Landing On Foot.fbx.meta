@@ -5,7 +5,7 @@ ModelImporter:
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: mixamo.com
+    second: Landing On Foot
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -36,11 +36,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: mixamo.com
+      name: Landing On Foot
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 10
-      lastFrame: 26
+      firstFrame: 6
+      lastFrame: 32
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

@@ -23,20 +23,34 @@ public class PlayerLocomotionAnimator : LocomotionAnimator
 
     protected override void OnLocomotionTypeChanged(LocomotionType type)
     {
+        SetFalse();
+
         switch (type)
         {
             case LocomotionType.Ground:
-                Animator.SetBool("LocomotionIsJumping", false);
-                Animator.SetBool("LocomotionIsFalling", false);
+                Animator.SetBool("LocomotionIsGround", true);
                 break;
             case LocomotionType.Fall:
-                Animator.SetBool("LocomotionIsJumping", false);
-                Animator.SetBool("LocomotionIsFalling", true);
+                Animator.SetBool("LocomotionIsFall", true);
                 break;
             case LocomotionType.Jump:
-                Animator.SetBool("LocomotionIsJumping", true);
-                Animator.SetBool("LocomotionIsFalling", false);
+                Animator.SetBool("LocomotionIsJump", true);
+                break;
+            case LocomotionType.Fly:
+                Animator.SetBool("LocomotionIsFly", true);
+                break;
+            case LocomotionType.Dodge:
+                Animator.SetBool("LocomotionIsDodge", true);
                 break;
         }
+    }
+
+    private void SetFalse()
+    {
+        Animator.SetBool("LocomotionIsGround", false);
+        Animator.SetBool("LocomotionIsFall", false);
+        Animator.SetBool("LocomotionIsJump", false);
+        Animator.SetBool("LocomotionIsFly", false);
+        Animator.SetBool("LocomotionIsDodge", false);
     }
 }

@@ -80,6 +80,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dodge"",
+                    ""type"": ""Button"",
+                    ""id"": ""9d76791c-6052-4dc8-8734-587eb93db719"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -240,7 +249,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""e30f4f65-41ea-4622-af89-2e58a942b336"",
-                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -273,7 +282,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""d1c8d5ce-2cb1-4177-acda-2d8760e2644e"",
-                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -346,6 +355,28 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""Vertical Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eafb37c8-78eb-4dca-9f9f-cd6922e4203a"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""80406187-8e53-45bc-8337-933803551ab6"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse & Keyboard"",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -482,6 +513,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Movement_Sneak = m_Movement.FindAction("Sneak", throwIfNotFound: true);
         m_Movement_Jump = m_Movement.FindAction("Jump", throwIfNotFound: true);
         m_Movement_Fly = m_Movement.FindAction("Fly", throwIfNotFound: true);
+        m_Movement_Dodge = m_Movement.FindAction("Dodge", throwIfNotFound: true);
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_OrbitalRotation = m_Camera.FindAction("Orbital Rotation", throwIfNotFound: true);
@@ -550,6 +582,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_Movement_Sneak;
     private readonly InputAction m_Movement_Jump;
     private readonly InputAction m_Movement_Fly;
+    private readonly InputAction m_Movement_Dodge;
     public struct MovementActions
     {
         private @PlayerInput m_Wrapper;
@@ -560,6 +593,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @Sneak => m_Wrapper.m_Movement_Sneak;
         public InputAction @Jump => m_Wrapper.m_Movement_Jump;
         public InputAction @Fly => m_Wrapper.m_Movement_Fly;
+        public InputAction @Dodge => m_Wrapper.m_Movement_Dodge;
         public InputActionMap Get() { return m_Wrapper.m_Movement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -587,6 +621,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Fly.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnFly;
                 @Fly.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnFly;
                 @Fly.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnFly;
+                @Dodge.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnDodge;
+                @Dodge.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnDodge;
+                @Dodge.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnDodge;
             }
             m_Wrapper.m_MovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -609,6 +646,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Fly.started += instance.OnFly;
                 @Fly.performed += instance.OnFly;
                 @Fly.canceled += instance.OnFly;
+                @Dodge.started += instance.OnDodge;
+                @Dodge.performed += instance.OnDodge;
+                @Dodge.canceled += instance.OnDodge;
             }
         }
     }
@@ -672,6 +712,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnSneak(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnFly(InputAction.CallbackContext context);
+        void OnDodge(InputAction.CallbackContext context);
     }
     public interface ICameraActions
     {

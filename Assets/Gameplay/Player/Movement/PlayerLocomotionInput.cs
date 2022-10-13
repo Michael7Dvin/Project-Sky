@@ -21,9 +21,10 @@ public class PlayerLocomotionInput : LocomotionInput
 
         _input.Movement.Jump.started += conext => _currentLocomotionType.SetValueAndForceNotify(LocomotionType.Jump);
         _input.Movement.Fly.started += context => _currentLocomotionType.SetValueAndForceNotify(LocomotionType.Fly);
+        _input.Movement.Dodge.started += context => _currentLocomotionType.SetValueAndForceNotify(LocomotionType.Dodge);
 
         _input.Movement.Sprint.started += context => _locomotionMoveSpeedTypeAction.Value = (LocomotionMoveSpeedType.Sprint, true);
-        _input.Movement.Sprint.canceled += context => _locomotionMoveSpeedTypeAction.Value = (LocomotionMoveSpeedType.Sprint, false);
+        _input.Movement.Sprint.canceled += context => { _locomotionMoveSpeedTypeAction.Value = (LocomotionMoveSpeedType.Sprint, false); Debug.Log(1); };
 
         _input.Movement.Sneak.started += context => _locomotionMoveSpeedTypeAction.Value = (LocomotionMoveSpeedType.Slow, true);
         _input.Movement.Sneak.canceled += context => _locomotionMoveSpeedTypeAction.Value = (LocomotionMoveSpeedType.Slow, false);

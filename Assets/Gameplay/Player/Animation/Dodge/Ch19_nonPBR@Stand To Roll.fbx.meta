@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 22cd8fcce4b9f954ab807a1460242e34
+guid: 24b2a910f4fb29d4bbf6fe110014ac2f
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Landing Flat
+    second: Stand To Roll
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -36,11 +36,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Landing Flat
+      name: Stand To Roll
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 0
-      lastFrame: 46
+      firstFrame: 5
+      lastFrame: 55
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

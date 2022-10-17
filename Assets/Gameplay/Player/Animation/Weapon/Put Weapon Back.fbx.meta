@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 22cd8fcce4b9f954ab807a1460242e34
+guid: 3988a5c4f04789a4fbd7c765ce61272f
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Landing Flat
+    second: Put Weapon Back
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -36,11 +36,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Landing Flat
+      name: Put Weapon Back
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 13
-      lastFrame: 46
+      firstFrame: 0
+      lastFrame: 98
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

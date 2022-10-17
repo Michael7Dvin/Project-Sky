@@ -24,7 +24,7 @@ public class FreeFlyLocomotion : BaseFlyLocomotion
     {
         get
         {
-            switch (LocomotionComposition.CurrentLocomotionMoveSpeedType.Value)
+            switch (CurrentLocomotionMoveSpeedType.Value)
             {
                 case LocomotionMoveSpeedType.Normal:
                     return LocomotionComposition.VerticalInputMagnitude * _normalVerticalSpeed;
@@ -42,7 +42,7 @@ public class FreeFlyLocomotion : BaseFlyLocomotion
     {
         get
         {
-            switch (LocomotionComposition.CurrentLocomotionMoveSpeedType.Value)
+            switch (CurrentLocomotionMoveSpeedType.Value)
             {
                 case LocomotionMoveSpeedType.Normal:
                     return LocomotionComposition.HorizontalInputMagnitude * _normalHorizontalSpeed;
@@ -61,8 +61,7 @@ public class FreeFlyLocomotion : BaseFlyLocomotion
     {
         base.Initialize(locomotionComposition);
 
-        LocomotionComposition
-            .CurrentLocomotionType
+        CurrentLocomotionType
             .Subscribe(type =>
             {
                 _flyDisposable.Clear();
@@ -73,6 +72,20 @@ public class FreeFlyLocomotion : BaseFlyLocomotion
                 }
             })
             .AddTo(_disposable);
+
+        void StartFly()
+        {
+            LocomotionComposition.MoveVelocity.y = 0f;
+
+            Observable
+                .EveryUpdate()
+                .Subscribe(_ =>
+                {
+                    MoveVertically();
+                    MoveHorizontally();
+                })
+                .AddTo(_flyDisposable);
+        }
     }
 
     public override void Disable()
@@ -80,34 +93,20 @@ public class FreeFlyLocomotion : BaseFlyLocomotion
         base.Disable();
     }
 
-    private void StartFly()
+    private void MoveVertically()
     {
-        LocomotionComposition.MoveVelocity.y = 0f;
-
-        Observable
-       .EveryUpdate()
-       .Subscribe(_ =>
-       {
-           VerticalMove();
-           HorizontalMove();
-       })
-       .AddTo(_flyDisposable);
-    }
-
-    private void VerticalMove()
-    {
-        if (Input.Direction.y != 0f)
+        if (InputDirection.y != 0f)
         {
-            Vector3 velocity = LocomotionComposition.VerticalInputMagnitude * VerticalMoveSpeed * new Vector3(0f, Input.Direction.normalized.y, 0f);
+            Vector3 velocity = LocomotionComposition.VerticalInputMagnitude * VerticalMoveSpeed * new Vector3(0f, InputDirection.normalized.y, 0f);
             CharacterController.Move(velocity * Time.deltaTime);
         }
     }
 
-    private void HorizontalMove()
+    private void MoveHorizontally()
     {
-        if (Input.Direction.x != 0f || Input.Direction.z != 0f)
+        if (InputDirection.x != 0f || InputDirection.z != 0f)
         {
-            Vector3 velocity = LocomotionComposition.HorizontalInputMagnitude * HorizontalMoveSpeed * Input.Direction.normalized;
+            Vector3 velocity = LocomotionComposition.HorizontalInputMagnitude * HorizontalMoveSpeed * InputDirection.normalized;
             CharacterController.Move(velocity * Time.deltaTime);
 
             RotateTowardsMove();

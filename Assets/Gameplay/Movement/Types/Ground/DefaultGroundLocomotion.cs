@@ -22,7 +22,7 @@ public class DefaultGroundLocomotion : BaseGroundLocomotion
     {
         get
         {
-            switch (LocomotionComposition.CurrentLocomotionMoveSpeedType.Value)
+            switch (CurrentLocomotionMoveSpeedType.Value)
             {
                 case LocomotionMoveSpeedType.Normal:
                     return LocomotionComposition.HorizontalInputMagnitude * _jogSpeed;
@@ -41,8 +41,7 @@ public class DefaultGroundLocomotion : BaseGroundLocomotion
     {
         base.Initialize(locomotionComposition);
 
-        LocomotionComposition
-           .CurrentLocomotionType
+        CurrentLocomotionType
            .Subscribe(type =>
            {
                _moveDisposable.Clear();
@@ -64,21 +63,17 @@ public class DefaultGroundLocomotion : BaseGroundLocomotion
     private void StartMovement()
     {
         Observable
-        .EveryUpdate()
-        .Subscribe(_ => Move())
-        .AddTo(_moveDisposable);
+            .EveryUpdate()
+            .Subscribe(_ => Move())
+            .AddTo(_moveDisposable);
 
         void Move()
         {
-            if (Input.Direction != Vector3.zero)
+            if (InputDirection != Vector3.zero)
             {
-                if (LocomotionComposition.GroundDetector.IsGrounded.Value == true)
-                {
-                    Vector3 velocity = LocomotionComposition.HorizontalInputMagnitude * HorizontalMoveSpeed * Input.Direction.normalized;
-                    CharacterController.Move(velocity * Time.deltaTime);
-
-                    RotateTowardsMove();
-                }
+                Vector3 velocity = LocomotionComposition.HorizontalInputMagnitude * HorizontalMoveSpeed * InputDirection.normalized;
+                CharacterController.Move(velocity * Time.deltaTime);
+                RotateTowardsMove();
             }
         }
     }

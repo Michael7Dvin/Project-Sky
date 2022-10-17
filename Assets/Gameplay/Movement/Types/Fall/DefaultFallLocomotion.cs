@@ -3,8 +3,16 @@ using UniRx;
 
 public class DefaultFallLocomotion : BaseFallLocomotion
 {
-    private const float FREE_FALL_VERTICAL_MAX_SPEED = -50f;
-    private const float CONSTANT_VERTICAL_SPEED = -9.8f;
+    private const float GRAVITY_ACCELERATION = -9.8f;
+
+    private const float GROUNDED_MAX_VERTICAL_SPEED = -5f;
+    private const float GROUNDED_VERTICAL_SPEED_MULTIPLIER = 1.7f;
+
+    private const float NOT_GROUNDED_MAX_VERTICAL_SPEED = -12f;
+    private const float NOT_GROUNDED_VERTICAL_SPEED_MULTIPLIER = 1.7f;
+
+    private const float FALL_MAX_VERTICAL_SPEED = -50f;
+    private const float FALL_VERTICAL_SPEED_MULTIPLIER = 0.5f;
 
     private readonly float _horizontalSpeed;
 
@@ -16,16 +24,53 @@ public class DefaultFallLocomotion : BaseFallLocomotion
         _horizontalSpeed = horizontalSpeed;
     }
 
-    public override float VerticalMoveSpeed => CONSTANT_VERTICAL_SPEED;
+    public override float VerticalMoveSpeed => NOT_GROUNDED_MAX_VERTICAL_SPEED;
     public override float HorizontalMoveSpeed => LocomotionComposition.HorizontalInputMagnitude * _horizontalSpeed;
+
+    private float MaxVerticalSpeed
+    {
+        get
+        {
+            if (CurrentLocomotionType.Value == LocomotionType.Fall)
+            {
+                return FALL_MAX_VERTICAL_SPEED;
+            }
+
+            if(IsGrounded.Value == true)
+            {
+                return GROUNDED_MAX_VERTICAL_SPEED;
+            }
+            else
+            {
+                return NOT_GROUNDED_MAX_VERTICAL_SPEED;
+            }
+        }
+    }
+    private float VerticalAccelerationMultiplier
+    {
+        get
+        {
+            if (CurrentLocomotionType.Value == LocomotionType.Fall)
+            {
+                return FALL_VERTICAL_SPEED_MULTIPLIER;
+            }
+
+            if (IsGrounded.Value == true)
+            {
+                return GROUNDED_VERTICAL_SPEED_MULTIPLIER;
+            }
+            else
+            {
+                return NOT_GROUNDED_VERTICAL_SPEED_MULTIPLIER;
+            }
+        }
+    }
 
     public override void Initialize(LocomotionComposition locomotionComposition)
     {
         base.Initialize(locomotionComposition);
 
-
-        LocomotionComposition
-            .CurrentLocomotionType
+        CurrentLocomotionType
             .Subscribe(type =>
             {
                 _verticalMoveDisposable.Clear();
@@ -33,19 +78,39 @@ public class DefaultFallLocomotion : BaseFallLocomotion
 
                 if (type == LocomotionType.Fall)
                 {
-                    StartFreeFallVerticalMove();
-                    StartHorizontalMove();
+                    StartVerticalMovement();
+                    StartHorizontalMovement();
                     return;
                 }
 
                 if (type == LocomotionType.Fly)
-                {
+                {                 
                     return;
                 }
 
-                StartConstantVerticalMove();      
+                StartVerticalMovement();      
             })
             .AddTo(_disposable);
+
+        IsGrounded
+            .Where(isGrounded => isGrounded == true && LocomotionComposition.MoveVelocity.y < GROUNDED_MAX_VERTICAL_SPEED)
+            .Subscribe(_ => LocomotionComposition.MoveVelocity.y = GROUNDED_MAX_VERTICAL_SPEED)
+            .AddTo(_disposable);
+
+        void StartVerticalMovement()
+        {
+            Observable
+                .EveryUpdate()
+                .Subscribe(_ => MoveVertically())
+                .AddTo(_verticalMoveDisposable);
+        }
+        void StartHorizontalMovement()
+        {
+            Observable
+                .EveryUpdate()
+                .Subscribe(_ => MoveHorizontally())
+                .AddTo(_verticalMoveDisposable);
+        }
     }
 
     public override void Disable()
@@ -55,72 +120,29 @@ public class DefaultFallLocomotion : BaseFallLocomotion
         _horizontalMoveDisposable.Clear();
     }
 
-    private void StartConstantVerticalMove()
+    private void MoveVertically()
     {
-        if(LocomotionComposition.MoveVelocity.y < CONSTANT_VERTICAL_SPEED)
+        if (LocomotionComposition.MoveVelocity.y > MaxVerticalSpeed)
         {
-            LocomotionComposition.MoveVelocity.y = CONSTANT_VERTICAL_SPEED;
-        }
-
-        Observable
-            .EveryUpdate()
-            .Subscribe(_ => ConstantVerticalMove())
-            .AddTo(_verticalMoveDisposable);
-
-        void ConstantVerticalMove()
-        {
-            if (LocomotionComposition.MoveVelocity.y > CONSTANT_VERTICAL_SPEED)
+            if ((LocomotionComposition.MoveVelocity.y + GRAVITY_ACCELERATION * VerticalAccelerationMultiplier * Time.deltaTime) < MaxVerticalSpeed)
             {
-                if(LocomotionComposition.MoveVelocity.y + CONSTANT_VERTICAL_SPEED * 1.7f * Time.deltaTime < CONSTANT_VERTICAL_SPEED)
-                {
-                    LocomotionComposition.MoveVelocity.y = CONSTANT_VERTICAL_SPEED;
-                    return;
-                }
-
-                LocomotionComposition.MoveVelocity.y += CONSTANT_VERTICAL_SPEED * 1.7f * Time.deltaTime;
+                LocomotionComposition.MoveVelocity.y = MaxVerticalSpeed;
+                return;
             }
-        }
-    }
-    private void StartFreeFallVerticalMove()
-    {
-        LocomotionComposition.MoveVelocity.y = CONSTANT_VERTICAL_SPEED;
 
-        Observable
-            .EveryUpdate()
-            .Subscribe(_ => FreeFallVerticalMove())
-            .AddTo(_verticalMoveDisposable);
-
-        void FreeFallVerticalMove()
-        {
-            if (LocomotionComposition.MoveVelocity.y > FREE_FALL_VERTICAL_MAX_SPEED)
-            {
-                if (LocomotionComposition.MoveVelocity.y + CONSTANT_VERTICAL_SPEED / 2f * Time.deltaTime < FREE_FALL_VERTICAL_MAX_SPEED)
-                {
-                    LocomotionComposition.MoveVelocity.y = FREE_FALL_VERTICAL_MAX_SPEED;
-                    return;
-                }
-
-                LocomotionComposition.MoveVelocity.y += CONSTANT_VERTICAL_SPEED / 2f * Time.deltaTime;
-            }
+            LocomotionComposition.MoveVelocity.y += GRAVITY_ACCELERATION * VerticalAccelerationMultiplier * Time.deltaTime;
         }
     }
 
-    private void StartHorizontalMove()
+    private void MoveHorizontally()
     {
-        Observable
-            .EveryUpdate()
-            .Subscribe(_ => HorizontalMove())
-            .AddTo(_verticalMoveDisposable);
-
-        void HorizontalMove()
+        if (InputDirection != Vector3.zero)
         {
-            if (Input.Direction != Vector3.zero)
-            {
-                Vector3 velocity = HorizontalMoveSpeed * Input.Direction.normalized;
-                CharacterController.Move(velocity * Time.deltaTime);
+            Vector3 velocity = HorizontalMoveSpeed * InputDirection.normalized;
+            CharacterController.Move(velocity * Time.deltaTime);
 
-                RotateTowardsMove();
-            }
+            RotateTowardsMove();
         }
     }
 }
+

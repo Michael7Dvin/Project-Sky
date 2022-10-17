@@ -12,12 +12,14 @@ public abstract class BaseLocomotion
     public abstract float HorizontalMoveSpeed { get; }
 
     protected LocomotionComposition LocomotionComposition { get; private set; }
-    protected Transform Transform => LocomotionComposition.transform;
-    protected IReadOnlyReactiveProperty<LocomotionType> CurrentLocomotionType => LocomotionComposition.CurrentLocomotionType;
 
-    protected LocomotionInput Input => LocomotionComposition.Input;
+    protected IReadOnlyReactiveProperty<LocomotionType> CurrentLocomotionType => LocomotionComposition.CurrentLocomotionType;
+    protected IReadOnlyReactiveProperty<LocomotionMoveSpeedType> CurrentLocomotionMoveSpeedType => LocomotionComposition.CurrentLocomotionMoveSpeedType;
+
     protected CharacterController CharacterController => LocomotionComposition.CharacterController;
-    protected GroundDetector GroundDetector => LocomotionComposition.GroundDetector;
+    protected Vector3 InputDirection => LocomotionComposition.InputDirection;
+    protected IReadOnlyReactiveProperty<bool> IsGrounded => LocomotionComposition.IsGrounded;
+    protected Transform Transform => LocomotionComposition.transform;
 
     public virtual void Initialize(LocomotionComposition locomotionComposition)
     {
@@ -28,9 +30,9 @@ public abstract class BaseLocomotion
 
     protected void RotateTowardsMove()
     {
-        if(Input.Direction.x != 0 && Input.Direction.z != 0)
+        if(InputDirection.x != 0 && InputDirection.z != 0)
         {
-            Quaternion rotation = Quaternion.LookRotation(new Vector3(Input.Direction.x, 0f, Input.Direction.z));
+            Quaternion rotation = Quaternion.LookRotation(new Vector3(InputDirection.x, 0f, InputDirection.z));
             Transform.rotation = Quaternion.RotateTowards(Transform.rotation, rotation, TOWARDS_MOVE_ROTATION_SPEED * Time.deltaTime);
         }
     }

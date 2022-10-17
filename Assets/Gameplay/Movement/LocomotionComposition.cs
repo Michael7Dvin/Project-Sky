@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UniRx;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController), typeof(VelocityCalculator))]
 public class LocomotionComposition : MonoBehaviour
 {
     public Vector3 MoveVelocity;
@@ -18,6 +18,7 @@ public class LocomotionComposition : MonoBehaviour
 
     [SerializeField] private LocomotionInput _input;
     [SerializeField] private GroundDetector _groundDetector;
+    private VelocityCalculator _velocityCalculator;
 
     private readonly CompositeDisposable _disposable = new CompositeDisposable();
     private readonly CompositeDisposable _fallingObserveDisposable = new CompositeDisposable();
@@ -61,27 +62,31 @@ public class LocomotionComposition : MonoBehaviour
     public IReadOnlyReactiveProperty<BaseDodgeLocomotion> Dodge => _dodge;
 
     public CharacterController CharacterController { get; private set; }
-    public LocomotionInput Input => _input;
-    public GroundDetector GroundDetector => _groundDetector;
+    public Vector3 InputDirection => _input.Direction;
+    public IReadOnlyReactiveProperty<bool> IsGrounded => _groundDetector.IsGrounded;
+    public Vector3 Velocity => _velocityCalculator.FrameVelocity;
 
-    private void Awake() => CharacterController = GetComponent<CharacterController>();
+    private void Awake()
+    {
+        CharacterController = GetComponent<CharacterController>();
+        _velocityCalculator = GetComponent<VelocityCalculator>();
+    }
     private void OnEnable()
     {
-        Input
+        _input
             .CurrentLocomotionType
             .Subscribe(type => OnInputLocomotionType(type))
             .AddTo(_disposable);
 
-        Input
+        _input
             .LocomotionMoveSpeedTypeAction
             .Subscribe(action => OnInputLocomotionMoveSpeedAction(action.Item1, action.Item2))
             .AddTo(_disposable);
 
-        GroundDetector
-            .IsGrounded
-            .Subscribe(state =>
+            IsGrounded
+            .Subscribe(isGrounded =>
             {
-                if(state == true)
+                if(isGrounded == true)
                 {
                     _fallingObserveDisposable.Clear();
                 }
@@ -92,21 +97,20 @@ public class LocomotionComposition : MonoBehaviour
                 }
             })
             .AddTo(_disposable);
-
-        // Procedural cohesion - CharacterController.Move subscribe should be last, otherwise CharacterController.velocty returns incorrect results
+       
         Observable
             .EveryUpdate()
             .Subscribe(_ => CharacterController.Move(MoveVelocity * Time.deltaTime))
             .AddTo(_disposable);
 
-
         void ObserveFalling()
         {
             Observable
                 .EveryUpdate()
+                .Where(_ => MoveVelocity.y < 0f)
                 .Subscribe(_ =>
                 {
-                    if (Mathf.Abs(CharacterController.velocity.y - _fall.Value.VerticalMoveSpeed) < 1)
+                    if (Mathf.Abs(Velocity.y - _fall.Value.VerticalMoveSpeed) < 1)
                     {
                         if (_currentLocomotionType.Value == LocomotionType.Ground || _currentLocomotionType.Value == LocomotionType.Jump)
                         {
@@ -123,7 +127,7 @@ public class LocomotionComposition : MonoBehaviour
                 .EveryUpdate()
                 .Subscribe(_ =>
                 {                    
-                    if (MoveVelocity.y <= 0 && GroundDetector.IsGrounded.Value == true && _currentLocomotionType.Value != LocomotionType.Ground)
+                    if (MoveVelocity.y <= 0 && IsGrounded.Value == true && _currentLocomotionType.Value != LocomotionType.Ground)
                     {
                         if (_currentLocomotionType.Value == LocomotionType.Jump || _currentLocomotionType.Value == LocomotionType.Fall)
                         {
@@ -135,7 +139,6 @@ public class LocomotionComposition : MonoBehaviour
                 })
                 .AddTo(_landingObserveDisposable);
         }
-
     }
 
     private void OnDisable() => _disposable.Clear();
@@ -262,7 +265,7 @@ public class LocomotionComposition : MonoBehaviour
                 return;
             }
 
-            if (GroundDetector.IsGrounded.Value == false)
+            if (IsGrounded.Value == false)
             {
                 return;
             }

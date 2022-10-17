@@ -31,14 +31,13 @@ public class MultiJumpLocomotion : BaseJumpLocomotion
     {
         base.Initialize(locomotionComposition);
 
-        LocomotionComposition
-            .CurrentLocomotionType
+        CurrentLocomotionType
             .Subscribe(type =>
             {
                 _horizontalMoveDisposable.Clear();
                 _multiJumpDisposable.Clear();
 
-                if (GroundDetector.IsGrounded.Value == true)
+                if (CoyoteTimeCounter > 0)
                 {
                     _remainingJumps = _additionalJumps;
 
@@ -56,7 +55,6 @@ public class MultiJumpLocomotion : BaseJumpLocomotion
                         StartHorizontalMovement();
                     }
                 }
-
             })
             .AddTo(_disposable);
     }
@@ -84,7 +82,7 @@ public class MultiJumpLocomotion : BaseJumpLocomotion
 
     private void StartHorizontalMovement()
     {
-        if (LocomotionComposition.CurrentLocomotionMoveSpeedType.Value == LocomotionMoveSpeedType.Sprint)
+        if (CurrentLocomotionMoveSpeedType.Value == LocomotionMoveSpeedType.Sprint)
         {
             _currentHorizontalSpeed = _sprintHorizontalSpeed;
         }
@@ -95,12 +93,12 @@ public class MultiJumpLocomotion : BaseJumpLocomotion
 
         Observable
             .EveryUpdate()
-            .Subscribe(_ => HorizontalMove())
+            .Subscribe(_ => MoveHorizontally())
             .AddTo(_horizontalMoveDisposable);
 
-        void HorizontalMove()
+        void MoveHorizontally()
         {
-            Vector3 velocity = LocomotionComposition.HorizontalInputMagnitude * HorizontalMoveSpeed * new Vector3(Input.Direction.normalized.x, 0f, Input.Direction.normalized.z);
+            Vector3 velocity = LocomotionComposition.HorizontalInputMagnitude * HorizontalMoveSpeed * new Vector3(InputDirection.normalized.x, 0f, InputDirection.normalized.z);
             CharacterController.Move(velocity * Time.deltaTime);
             RotateTowardsMove();
         }

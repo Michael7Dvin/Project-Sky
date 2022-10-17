@@ -25,7 +25,7 @@ public class GlideFlyLocomotion : BaseFlyLocomotion
     {
         get
         {
-            switch (LocomotionComposition.CurrentLocomotionMoveSpeedType.Value)
+            switch (CurrentLocomotionMoveSpeedType.Value)
             {
                 case LocomotionMoveSpeedType.Normal:
                     return _normalVerticalSpeed;
@@ -43,7 +43,7 @@ public class GlideFlyLocomotion : BaseFlyLocomotion
     {
         get
         {
-            switch (LocomotionComposition.CurrentLocomotionMoveSpeedType.Value)
+            switch (CurrentLocomotionMoveSpeedType.Value)
             {
                 case LocomotionMoveSpeedType.Normal:
                     return LocomotionComposition.HorizontalInputMagnitude * _normalHorizontalSpeed;
@@ -62,8 +62,7 @@ public class GlideFlyLocomotion : BaseFlyLocomotion
     {
         base.Initialize(locomotionComposition);
 
-        LocomotionComposition
-            .CurrentLocomotionType
+        CurrentLocomotionType
             .Subscribe(type =>
             {
                 _glideDisposable.Clear();
@@ -90,23 +89,23 @@ public class GlideFlyLocomotion : BaseFlyLocomotion
             .EveryUpdate()
             .Subscribe(_ =>
             {
-                VerticalMove();
-                HorizontalMove();
+                MoveVertically();
+                MoveHorizontally();
             })
             .AddTo(_glideDisposable);
     }
 
-    private void VerticalMove()
+    private void MoveVertically()
     {
         Vector3 velocity = Vector3.up * VerticalMoveSpeed;
         CharacterController.Move(velocity * Time.deltaTime);
     }
 
-    private void HorizontalMove()
+    private void MoveHorizontally()
     {
-        if (Input.Direction.x != 0f || Input.Direction.z != 0f)
+        if (InputDirection.x != 0f || InputDirection.z != 0f)
         {
-            Vector3 velocity = LocomotionComposition.HorizontalInputMagnitude * HorizontalMoveSpeed * Input.Direction.normalized;
+            Vector3 velocity = LocomotionComposition.HorizontalInputMagnitude * HorizontalMoveSpeed * InputDirection.normalized;
             CharacterController.Move(velocity * Time.deltaTime);
 
             RotateTowardsMove();

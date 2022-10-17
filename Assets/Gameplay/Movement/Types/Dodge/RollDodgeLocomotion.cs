@@ -19,8 +19,7 @@ public class RollDodgeLocomotion : BaseDodgeLocomotion
     {
         base.Initialize(locomotionComposition);
 
-        LocomotionComposition
-            .CurrentLocomotionType
+        CurrentLocomotionType
             .Where(type => type == LocomotionType.Dodge)
             .Subscribe(type => Roll())
             .AddTo(_disposable);            
@@ -28,22 +27,22 @@ public class RollDodgeLocomotion : BaseDodgeLocomotion
 
     private void Roll()
     {
-        Vector3 velocity;
+        Vector3 moveVelocity;
 
-        if (Input.Direction == Vector3.zero)
+        if (InputDirection == Vector3.zero)
         {
-            velocity = Transform.forward * HorizontalMoveSpeed;            
+            moveVelocity = Transform.forward * HorizontalMoveSpeed;            
         }
         else
         {
-            velocity = Input.Direction.normalized * HorizontalMoveSpeed;
+            moveVelocity = InputDirection.normalized * HorizontalMoveSpeed;
         }
 
         Observable
             .EveryUpdate()
             .Subscribe(_ =>
             {
-                MoveHorizontal();
+                MoveHorizontally();
                 RotateTowardsRoll();
             })
             .AddTo(_rollDisposable);
@@ -57,15 +56,15 @@ public class RollDodgeLocomotion : BaseDodgeLocomotion
             })
             .AddTo(_rollDisposable);
 
-        void MoveHorizontal()
+        void MoveHorizontally()
         {                       
-            CharacterController.Move(velocity * Time.deltaTime);
+            CharacterController.Move(moveVelocity * Time.deltaTime);
         }
         void RotateTowardsRoll()
         {
             float rotationSpeed = 400f;
 
-            Quaternion rotation = Quaternion.LookRotation(new Vector3(velocity.x, 0f, velocity.z));
+            Quaternion rotation = Quaternion.LookRotation(new Vector3(moveVelocity.x, 0f, moveVelocity.z));
             Transform.rotation = Quaternion.RotateTowards(Transform.rotation, rotation, rotationSpeed * Time.deltaTime);
         }
     }

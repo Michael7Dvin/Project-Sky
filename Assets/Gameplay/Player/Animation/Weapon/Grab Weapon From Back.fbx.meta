@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: a538d68af593e784184331baa760115f
+guid: 66da7b5378517124f949823edd59b05a
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Landing To Roll
+    second: Grab Weapon From Back
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -36,11 +36,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Landing To Roll
+      name: Grab Weapon From Back
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 64
+      lastFrame: 87
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

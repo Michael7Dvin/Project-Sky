@@ -3,18 +3,21 @@ using UnityEngine;
 [RequireComponent(typeof(LocomotionComposition))]
 public class InitialPlayerLocomotionProvider : MonoBehaviour
 {
+    [Header("Ground")]
     [SerializeField] private float _groundJogSpeed;
     [SerializeField] private float _groundSprintSpeed;
     [SerializeField] private float _groundSneakSpeed;
 
+    [Header("Fall")]
     [SerializeField] private float _fallHorizontalSpeed;
-    [SerializeField] private float _fallRotationSpeed;
 
+    [Header("Jump")]
     [SerializeField] private float _jumpSpeed;
     [SerializeField] private float _jumpNormalHorizontalSpeed;
     [SerializeField] private float _jumpSprintHorizontalSpeed;
     [SerializeField] private int _jumpAdditionalJumps;
 
+    [Header("Dodge")]
     [SerializeField] private float _dodgeHorizontalSpeed;
     [SerializeField] private float _dodgeDuration;
 

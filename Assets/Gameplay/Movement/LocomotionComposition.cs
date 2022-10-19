@@ -5,7 +5,7 @@ using UniRx;
 [RequireComponent(typeof(CharacterController), typeof(VelocityCalculator))]
 public class LocomotionComposition : MonoBehaviour
 {
-    public Vector3 MoveVelocity;
+    [NonSerialized] public Vector3 MoveVelocity;
 
     private readonly ReactiveProperty<LocomotionType> _currentLocomotionType = new ReactiveProperty<LocomotionType>();
     private readonly ReactiveProperty<LocomotionMoveSpeedType> _currentLocomotionMoveSpeedType = new ReactiveProperty<LocomotionMoveSpeedType>();

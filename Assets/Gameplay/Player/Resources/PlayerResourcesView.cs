@@ -1,15 +1,15 @@
 using UnityEngine;
 using UniRx;
 
-[RequireComponent(typeof(ResourcesData))]
+[RequireComponent(typeof(ResourcesStorage))]
 public class PlayerResourcesView : MonoBehaviour
 {
-    private ResourcesData _resourcesData;
+    private ResourcesStorage _resourcesData;
     private readonly CompositeDisposable _disposable = new CompositeDisposable();
 
     private void Awake()
     {
-        _resourcesData = GetComponent<ResourcesData>();
+        _resourcesData = GetComponent<ResourcesStorage>();
     }
 
     private void OnEnable()

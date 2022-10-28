@@ -3,14 +3,14 @@ using DG.Tweening;
 
 public class PickUpableRotation : MonoBehaviour
 {
-    private Vector3 _rotation;
+    private Vector3 _initialRotation;
 
     private Tween YRotate
     {
         get
         {
             return transform
-                .DORotate(new Vector3(_rotation.x, _rotation.y - 360f, _rotation.z), 5f, RotateMode.FastBeyond360)
+                .DORotate(new Vector3(_initialRotation.x, _initialRotation.y - 360f, _initialRotation.z), 5f, RotateMode.FastBeyond360)
                 .SetEase(Ease.Flash)
                 .SetLoops(-1)
                 .SetUpdate(UpdateType.Normal)
@@ -20,7 +20,7 @@ public class PickUpableRotation : MonoBehaviour
 
     private void OnEnable()
     {
-        _rotation = transform.rotation.eulerAngles;
+        _initialRotation = transform.rotation.eulerAngles;
         YRotate.Play();
     }
 }

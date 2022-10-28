@@ -55,7 +55,7 @@ public class PlayerInteractor : MonoBehaviour
                 _currentInteractable.Value = default;
                 return;
             case 1:
-                if (_inRangeInteractables.FirstOrDefault().Key.IsActive == true)
+                if (_inRangeInteractables.FirstOrDefault().Key.IsInteractionActive == true)
                 {
                     _currentInteractable.Value = _inRangeInteractables.FirstOrDefault();
                 }                     
@@ -64,7 +64,7 @@ public class PlayerInteractor : MonoBehaviour
 
         Dictionary<IInteractable, GameObject> activeInteractables =
             _inRangeInteractables
-            .Where(interactable => interactable.Key.IsActive == true)
+            .Where(interactable => interactable.Key.IsInteractionActive == true)
             .ToDictionary(_ => _.Key, _ => _.Value);
 
         switch (activeInteractables.Count)
@@ -96,15 +96,15 @@ public class PlayerInteractor : MonoBehaviour
     {
         if (IsCurrentInteractableDefault == false)
         {
-            if (_currentInteractable.Value.Value.TryGetComponent(out ILockableWithKey lockable))
+            if (_currentInteractable.Value.Value.TryGetComponent(out KeyLock keylock))
             {
-                TryOpenLockable(lockable);
+                TryOpenKeyLock(keylock);
             }
             
             _currentInteractable.Value.Key.Interact();            
         }
 
-        bool TryOpenLockable(ILockableWithKey keyLock)
+        bool TryOpenKeyLock(KeyLock keyLock)
         {
             if (keyLock.IsLocked == true)
             {

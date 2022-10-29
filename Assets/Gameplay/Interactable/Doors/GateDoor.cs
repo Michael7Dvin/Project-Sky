@@ -28,6 +28,8 @@ public class GateDoor : BaseDoor
 
     public override void Open()
     {
+        base.Open();
+
         _state.Value = DoorState.Opening;
 
         bool leftOpened = false;
@@ -60,6 +62,8 @@ public class GateDoor : BaseDoor
 
     public override void Close()
     {
+        base.Close();
+
         _state.Value = DoorState.Closing;
 
         bool leftClosed = false;
@@ -89,6 +93,9 @@ public class GateDoor : BaseDoor
             }
         }
     }
+
+    protected override void StopOpening() => DOTween.Kill(gameObject);
+    protected override void StopClosing() => DOTween.Kill(gameObject);
 
     private Tween GetRotation(Transform transform, float yRotation, float speed, Vector3 _initialRotation)
     {

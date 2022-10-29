@@ -1,6 +1,6 @@
 public interface IInteractable
 {
-    bool IsInteractionActive { get; }
+    bool IsInteractionAllowed { get; }
 
     abstract void Interact();
 }

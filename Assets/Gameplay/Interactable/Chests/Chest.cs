@@ -19,7 +19,7 @@ public class Chest : MonoBehaviour, IInteractable
     private readonly ReactiveCommand _chestOpened = new ReactiveCommand();
     private readonly ReactiveCommand<PickUpable> _itemSpawned = new ReactiveCommand<PickUpable>();
 
-    public bool IsInteractionActive => _isInteractionActive;
+    public bool IsInteractionAllowed => _isInteractionActive;
 
     public IObservable<Unit> ChestOpened => _chestOpened;
     public IObservable<PickUpable> ItemSpawned => _itemSpawned;

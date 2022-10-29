@@ -13,6 +13,8 @@ public class PortcullisDoor : BaseDoor
 
     public override void Open()
     {
+        base.Open();
+
         _state.Value = DoorState.Opening;
 
         GetMovement(_openedYPosition, _openingSpeed)
@@ -22,12 +24,17 @@ public class PortcullisDoor : BaseDoor
 
     public override void Close()
     {
+        base.Close();
+
         _state.Value = DoorState.Closing;
 
         GetMovement(_closedYPosition, _closingSpeed)
             .Play()
             .OnComplete(() => _state.Value = DoorState.Closed);
     }
+
+    protected override void StopOpening() => DOTween.Kill(gameObject);
+    protected override void StopClosing() => DOTween.Kill(gameObject);
 
     private Tween GetMovement(float yPosition, float speed)
     {

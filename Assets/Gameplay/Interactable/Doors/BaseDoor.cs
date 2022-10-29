@@ -4,17 +4,17 @@ using UniRx;
 [RequireComponent(typeof(BaseLock))]
 public abstract class BaseDoor : MonoBehaviour, IInteractable
 {
-    [SerializeField] private bool _isInteractionActive = true;
+    protected readonly ReactiveProperty<DoorState> _state = new ReactiveProperty<DoorState>();
+
+    [SerializeField] private bool _isInteractionAllowed = true;
 
     [Tooltip("Closing & Opening aren't allowed")]
     [SerializeField] private DoorState _initialState;
 
-    protected readonly ReactiveProperty<DoorState> _state = new ReactiveProperty<DoorState>();
-
     private BaseLock _lock;
 
-    public bool IsInteractionActive => _isInteractionActive;
     public IReadOnlyReactiveProperty<DoorState> State => _state;
+    public bool IsInteractionAllowed => _isInteractionAllowed;
 
     protected virtual void Awake()
     {
@@ -31,12 +31,12 @@ public abstract class BaseDoor : MonoBehaviour, IInteractable
         _lock = GetComponent<BaseLock>();
     }
 
-    public abstract void Open();
-    public abstract void Close();
+    public virtual void Open() => StopClosing();
+    public virtual void Close() => StopOpening();
 
     public void Interact()
     {
-        if (_isInteractionActive == true)
+        if (_isInteractionAllowed == true)
         {
             if (_lock.IsLocked == false)
             {
@@ -52,4 +52,7 @@ public abstract class BaseDoor : MonoBehaviour, IInteractable
             }
         }
     }
+
+    protected abstract void StopOpening();
+    protected abstract void StopClosing();
 }

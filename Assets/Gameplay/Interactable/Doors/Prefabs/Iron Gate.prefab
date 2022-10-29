@@ -203,9 +203,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8801206885314157316}
-  - component: {fileID: 663071443332884092}
-  - component: {fileID: 2445650044642471643}
   - component: {fileID: 7697394854503168380}
+  - component: {fileID: 2445650044642471643}
+  - component: {fileID: 663071443332884092}
   m_Layer: 0
   m_Name: Iron Gate
   m_TagString: Untagged
@@ -230,18 +230,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &663071443332884092
-MonoBehaviour:
+--- !u!65 &7697394854503168380
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9111366043384079450}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c880fefa8f368148b038bad18cada8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  serializedVersion: 2
+  m_Size: {x: 0.78558326, y: 0.57113683, z: 0.013651419}
+  m_Center: {x: 0.0010344908, y: 0.2847507, z: 0.0007138658}
 --- !u!114 &2445650044642471643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,26 +255,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11927050a74a490439d9ab372a99cd1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isInteractionActive: 1
+  _isInteractionAllowed: 1
   _initialState: 0
-  _leftTransform: {fileID: 7037070395084708104}
-  _rightTransform: {fileID: 2019525647260299030}
+  _leftMovingPart: {fileID: 0}
+  _rightMovingPart: {fileID: 0}
   _openingSpeed: 30
   _closingSpeed: 30
   _leftOpenedYRotation: -90
   _rightOpenedYRotation: 90
   _leftClosedYRotation: 0
   _rightClosedYRotation: 0
---- !u!65 &7697394854503168380
-BoxCollider:
+--- !u!114 &663071443332884092
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9111366043384079450}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.78558326, y: 0.5673679, z: 0.01365142}
-  m_Center: {x: 0.0010344766, y: 0.33563113, z: 0.0007138659}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c880fefa8f368148b038bad18cada8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

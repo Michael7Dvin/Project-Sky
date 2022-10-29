@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 974908740642672291}
-  - component: {fileID: 974908740642672292}
-  - component: {fileID: 974908740642672293}
   - component: {fileID: 974908740642672294}
+  - component: {fileID: 974908740642672293}
+  - component: {fileID: 974908740642672292}
   m_Layer: 0
   m_Name: Wooden Door
   m_TagString: Untagged
@@ -35,37 +35,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -120.643, z: 0}
---- !u!114 &974908740642672292
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 974908740642672295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c880fefa8f368148b038bad18cada8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &974908740642672293
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 974908740642672295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bdd99c6a0fc7cd4d986efe3e66f23d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _isInteractionActive: 1
-  _initialState: 0
-  _movingPart: {fileID: 8984496962419975338}
-  _openingSpeed: 55
-  _closingSpeed: 55
-  _openedYRotation: -90
-  _closedYRotation: 0
 --- !u!65 &974908740642672294
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -79,6 +48,37 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 4.686873, y: 95.64099, z: 51.482475}
   m_Center: {x: 0.00029282994, y: 47.32049, z: -25.364145}
+--- !u!114 &974908740642672293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 974908740642672295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bdd99c6a0fc7cd4d986efe3e66f23d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isInteractionAllowed: 1
+  _initialState: 0
+  _movingPart: {fileID: 8984496962419975338}
+  _openingSpeed: 55
+  _closingSpeed: 55
+  _openedYRotation: -90
+  _closedYRotation: 0
+--- !u!114 &974908740642672292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 974908740642672295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c880fefa8f368148b038bad18cada8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7276563869410017517
 GameObject:
   m_ObjectHideFlags: 0

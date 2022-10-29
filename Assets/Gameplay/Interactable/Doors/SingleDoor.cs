@@ -22,6 +22,8 @@ public class SingleDoor : BaseDoor
 
     public override void Open()
     {
+        base.Open();
+
         _state.Value = DoorState.Opening;
 
         GetRotation(_openedYRotation, _openingSpeed)
@@ -31,12 +33,17 @@ public class SingleDoor : BaseDoor
 
     public override void Close()
     {
+        base.Close();
+
         _state.Value = DoorState.Closing;
 
         GetRotation(_closedYRotation, _closingSpeed)
             .Play()
             .OnComplete(() => _state.Value = DoorState.Closed);
     }
+
+    protected override void StopOpening() => DOTween.Kill(gameObject);
+    protected override void StopClosing() => DOTween.Kill(gameObject);
 
     private Tween GetRotation(float yRotation, float speed)
     {
@@ -47,4 +54,5 @@ public class SingleDoor : BaseDoor
             .SetUpdate(UpdateType.Normal)
             .SetLink(gameObject);
     }
+
 }

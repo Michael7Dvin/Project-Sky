@@ -106,9 +106,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7233229068253737930}
-  - component: {fileID: 7731186619617720954}
-  - component: {fileID: 8640163220483920325}
   - component: {fileID: 7731186619617720955}
+  - component: {fileID: 8640163220483920325}
+  - component: {fileID: 7731186619617720954}
   m_Layer: 0
   m_Name: Portcullis
   m_TagString: Untagged
@@ -132,37 +132,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7731186619617720954
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8010293155276220784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c880fefa8f368148b038bad18cada8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8640163220483920325
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8010293155276220784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbf0a6b7fd01b8845b31df9a7690dbf8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _isInteractionActive: 1
-  _initialState: 0
-  _movingPart: {fileID: 573919562351805660}
-  _openingSpeed: 1
-  _closingSpeed: 8
-  _openedYPosition: 3.5
-  _closedYPosition: 0
 --- !u!65 &7731186619617720955
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -176,3 +145,34 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3.0252066, y: 4.034658, z: 0.2867713}
   m_Center: {x: 0.0031512459, y: 0.0031511553, z: 0.009143244}
+--- !u!114 &8640163220483920325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8010293155276220784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbf0a6b7fd01b8845b31df9a7690dbf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isInteractionAllowed: 1
+  _initialState: 0
+  _movingPart: {fileID: 573919562351805660}
+  _openingSpeed: 1
+  _closingSpeed: 8
+  _openedYPosition: 3.5
+  _closedYPosition: 0
+--- !u!114 &7731186619617720954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8010293155276220784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c880fefa8f368148b038bad18cada8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

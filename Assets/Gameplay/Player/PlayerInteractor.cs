@@ -55,7 +55,7 @@ public class PlayerInteractor : MonoBehaviour
                 _currentInteractable.Value = default;
                 return;
             case 1:
-                if (_inRangeInteractables.FirstOrDefault().Key.IsInteractionActive == true)
+                if (_inRangeInteractables.FirstOrDefault().Key.IsInteractionAllowed == true)
                 {
                     _currentInteractable.Value = _inRangeInteractables.FirstOrDefault();
                 }                     
@@ -64,7 +64,7 @@ public class PlayerInteractor : MonoBehaviour
 
         Dictionary<IInteractable, GameObject> activeInteractables =
             _inRangeInteractables
-            .Where(interactable => interactable.Key.IsInteractionActive == true)
+            .Where(interactable => interactable.Key.IsInteractionAllowed == true)
             .ToDictionary(_ => _.Key, _ => _.Value);
 
         switch (activeInteractables.Count)

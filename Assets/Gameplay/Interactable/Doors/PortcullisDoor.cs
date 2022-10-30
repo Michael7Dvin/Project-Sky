@@ -33,8 +33,8 @@ public class PortcullisDoor : BaseDoor
             .OnComplete(() => _state.Value = DoorState.Closed);
     }
 
-    protected override void StopOpening() => DOTween.Kill(gameObject);
-    protected override void StopClosing() => DOTween.Kill(gameObject);
+    protected override void StopOpening() => DOTween.Kill(_movingPart);
+    protected override void StopClosing() => DOTween.Kill(_movingPart);
 
     private Tween GetMovement(float yPosition, float speed)
     {

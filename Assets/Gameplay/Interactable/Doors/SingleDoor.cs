@@ -42,8 +42,8 @@ public class SingleDoor : BaseDoor
             .OnComplete(() => _state.Value = DoorState.Closed);
     }
 
-    protected override void StopOpening() => DOTween.Kill(gameObject);
-    protected override void StopClosing() => DOTween.Kill(gameObject);
+    protected override void StopOpening() => DOTween.Kill(_movingPart);
+    protected override void StopClosing() => DOTween.Kill(_movingPart);
 
     private Tween GetRotation(float yRotation, float speed)
     {
@@ -54,5 +54,4 @@ public class SingleDoor : BaseDoor
             .SetUpdate(UpdateType.Normal)
             .SetLink(gameObject);
     }
-
 }

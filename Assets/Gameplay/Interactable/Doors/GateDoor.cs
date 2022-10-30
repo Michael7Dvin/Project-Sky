@@ -94,8 +94,17 @@ public class GateDoor : BaseDoor
         }
     }
 
-    protected override void StopOpening() => DOTween.Kill(gameObject);
-    protected override void StopClosing() => DOTween.Kill(gameObject);
+    protected override void StopOpening()
+    {
+        DOTween.Kill(_leftMovingPart);
+        DOTween.Kill(_rightMovingPart);
+    }
+
+    protected override void StopClosing()
+    {
+        DOTween.Kill(_leftMovingPart);
+        DOTween.Kill(_rightMovingPart);
+    }
 
     private Tween GetRotation(Transform transform, float yRotation, float speed, Vector3 _initialRotation)
     {

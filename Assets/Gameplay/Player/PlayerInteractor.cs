@@ -58,7 +58,11 @@ public class PlayerInteractor : MonoBehaviour
                 if (_inRangeInteractables.FirstOrDefault().Key.IsInteractionAllowed == true)
                 {
                     _currentInteractable.Value = _inRangeInteractables.FirstOrDefault();
-                }                     
+                }
+                else
+                {
+                    _currentInteractable.Value = default;
+                }
                 return;
         }
 

@@ -3,28 +3,28 @@ using UniRx;
 
 public class InteractableSwitch : LogicalMechanism, IInteractable
 {
-    protected readonly ReactiveProperty<bool> _status = new ReactiveProperty<bool>();
+    protected readonly ReactiveProperty<bool> _output = new ReactiveProperty<bool>();
 
     [SerializeField] private bool _isInteractionAllowed = true;
 
     [SerializeField] private bool _initalStatus;
 
     public bool IsInteractionAllowed => _isInteractionAllowed;
-    public override IReadOnlyReactiveProperty<bool> Output => _status;
+    public override IReadOnlyReactiveProperty<bool> Output => _output;
 
-    private void Awake() => _status.Value = _initalStatus;
+    private void Awake() => _output.Value = _initalStatus;
 
     public void Interact()
     {
         if (_isInteractionAllowed == true)
         {
-            if (_status.Value == true)
+            if (_output.Value == true)
             {
-                _status.Value = false;
+                _output.Value = false;
             }
             else
             {
-                _status.Value = true;
+                _output.Value = true;
             }
         }
     }

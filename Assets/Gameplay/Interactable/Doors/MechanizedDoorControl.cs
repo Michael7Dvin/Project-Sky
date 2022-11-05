@@ -2,7 +2,7 @@ using UnityEngine;
 using UniRx;
 
 [RequireComponent(typeof(BaseDoor))]
-public class DoorControl : MonoBehaviour
+public class MechanizedDoorControl : MonoBehaviour
 {
     private BaseDoor _door;
     [SerializeField] private LogicalMechanism _logicalMechanism;
@@ -10,6 +10,14 @@ public class DoorControl : MonoBehaviour
     [SerializeField] private bool _isSingleUse;
 
     private readonly CompositeDisposable _disposable = new CompositeDisposable();
+
+    private void OnValidate()
+    {
+        if (_logicalMechanism == null)
+        {
+            Debug.LogError($"{gameObject} LogicalMechanism is null");
+        }
+    }
 
     private void Awake() => _door = GetComponent<BaseDoor>();
 

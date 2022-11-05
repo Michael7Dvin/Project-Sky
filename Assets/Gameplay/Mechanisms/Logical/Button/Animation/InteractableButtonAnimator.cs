@@ -1,25 +1,25 @@
 using UniRx;
 using UnityEngine;
 
-[RequireComponent(typeof(InteractableSwitch), typeof(Animator))]
-public class InteractableSwitchAnimator : MonoBehaviour
+[RequireComponent(typeof(InteractableButton), typeof(Animator))]
+public class InteractableButtonAnimator : MonoBehaviour
 {
     private readonly int _statusBoolParameterHash = Animator.StringToHash("Output");
 
-    private InteractableSwitch _switch;
+    private InteractableButton _button;
     private Animator _animator;
 
     private readonly CompositeDisposable _disposable = new CompositeDisposable();
 
     private void Awake()
     {
-        _switch = GetComponent<InteractableSwitch>();
+        _button = GetComponent<InteractableButton>();
         _animator = GetComponent<Animator>();
     }
 
     private void OnEnable()
     {
-        _switch
+        _button
             .Output
             .Subscribe(status =>
             {

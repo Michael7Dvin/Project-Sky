@@ -83,7 +83,7 @@ public class LocomotionComposition : MonoBehaviour
             .Subscribe(action => OnInputLocomotionMoveSpeedAction(action.Item1, action.Item2))
             .AddTo(_disposable);
 
-            IsGrounded
+        IsGrounded
             .Subscribe(isGrounded =>
             {
                 if(isGrounded == true)

@@ -18,7 +18,7 @@ public class CollapsingPlatform : MonoBehaviour
     private WaitForSeconds _waitRespawnTime;
 
     private bool _isCollapsed;
-    
+
     private void Awake()
     {
         _collider = GetComponent<Collider>();
@@ -28,11 +28,11 @@ public class CollapsingPlatform : MonoBehaviour
         _waitRespawnTime = new WaitForSeconds(_respawnTime);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
         if (_isCollapsed == false)
         {
-            if (collision.gameObject.TryGetComponent(out GroundDetector _))
+            if (other.TryGetComponent(out LocomotionComposition _))
             {
                 StartCoroutine(Collapse());
             }

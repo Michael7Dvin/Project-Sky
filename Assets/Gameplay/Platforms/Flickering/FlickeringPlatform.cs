@@ -4,53 +4,46 @@ using UnityEngine;
 [RequireComponent(typeof(Collider), typeof(MeshRenderer))]
 public class FlickeringPlatform : MonoBehaviour
 {
-    private Collider _collider;
-    private MeshRenderer _meshRenderer;
-
     [Range(0, float.MaxValue)]
     [SerializeField] private float _delay;
+    private WaitForSeconds _waitForDelay;
+
     [Range(0, float.MaxValue)]
     [SerializeField] private float _appearedTime;
+    private WaitForSeconds _waitForAppearedTime;
+
     [Range(0, float.MaxValue)]
     [SerializeField] private float _disappearedTime;
+    private WaitForSeconds _waitForDisappearedTime;
 
-    private WaitForSeconds _waitDelay;
-    private WaitForSeconds _waitAppearedTime;
-    private WaitForSeconds _waitDisappearedTime;
+    private Collider _collider;
+    private MeshRenderer _meshRenderer;
 
     private void Awake()
     {
         _collider = GetComponent<Collider>();
         _meshRenderer = GetComponent<MeshRenderer>();
 
-        _waitAppearedTime = new WaitForSeconds(_appearedTime);
-        _waitDisappearedTime = new WaitForSeconds(_disappearedTime);
-        _waitDelay = new WaitForSeconds(_delay);
+        _waitForAppearedTime = new WaitForSeconds(_appearedTime);
+        _waitForDisappearedTime = new WaitForSeconds(_disappearedTime);
+        _waitForDelay = new WaitForSeconds(_delay);
 
-        StartCoroutine(StartFlickering());
+        StartCoroutine(Flickering());
     }
 
-    private IEnumerator StartFlickering()
+    private IEnumerator Flickering()
     {
-        yield return _waitDelay;
-        StartCoroutine(Appear());
-    }
+        yield return _waitForDelay;
+        
+        while (true)
+        {
+            _collider.enabled = false;
+            _meshRenderer.enabled = false;
+            yield return _waitForDisappearedTime;
 
-    private IEnumerator Appear()
-    {
-        _collider.enabled = true;
-        _meshRenderer.enabled = true;
-
-        yield return _waitAppearedTime;
-        StartCoroutine(Disappear());
-    }
-
-    private IEnumerator Disappear()
-    {
-        _collider.enabled = false;
-        _meshRenderer.enabled = false;
-
-        yield return _waitDisappearedTime;
-        StartCoroutine(Appear());
+            _collider.enabled = true;
+            _meshRenderer.enabled = true;
+            yield return _waitForAppearedTime;
+        }
     }
 }

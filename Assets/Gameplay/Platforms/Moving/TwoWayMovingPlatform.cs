@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
-public class TwoWayMovingPlatform : MovingPlatform
+public class TwoWayMovingPlatform : BaseMovingPlatform
 {
     [SerializeField] private List<Transform> _movePoints;
 

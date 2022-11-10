@@ -3,31 +3,35 @@ using UnityEngine;
 using UniRx;
 
 public class Timer : LogicalMechanism
-{
-    [SerializeField] private LogicalMechanism _input;
-
+{    
     [Range(0, float.MaxValue)]
     [SerializeField] private float _time;
 
     private void OnEnable()
     {
-        _input
-            .Output
-            .Where(value => value == true)
-            .Subscribe(value =>
-            {
-                _output.Value = true;
-            })
-            .AddTo(_disposable);
+        foreach (LogicalMechanism input in _inputs)
+        {
+            input
+                .Output
+                .Skip(1)
+                .Where(value => value == true)
+                .Subscribe(value =>
+                {
+                    _output.Value = value;
+                })
+                .AddTo(Disposable);        
+        }
+        
 
-        _input
-            .Output
+        Output
             .Where(value => value == true)
             .Delay(TimeSpan.FromSeconds(_time))
             .Subscribe(value =>
             {
                 _output.Value = false;
             })
-            .AddTo(_disposable);
+            .AddTo(Disposable);
     }
+
+    private void Start() => SetInitialOutputValue(OrInputsValue);
 }

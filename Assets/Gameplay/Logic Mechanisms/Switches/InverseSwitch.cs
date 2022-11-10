@@ -1,15 +1,18 @@
-using UnityEngine;
 using UniRx;
 
 public class InverseSwitch : LogicalMechanism
 {
-    [SerializeField] private LogicalMechanism _input;
-
     private void OnEnable()
     {
-        _input
-            .Output
-            .Subscribe(value => _output.Value = !value)
-            .AddTo(_disposable);
+        foreach (LogicalMechanism input in _inputs)
+        {
+            input
+               .Output
+               .Skip(1)
+               .Subscribe(value => _output.Value = !value)
+               .AddTo(Disposable);
+        }          
     }
+
+    private void Start() => SetInitialOutputValue(!OrInputsValue);
 }

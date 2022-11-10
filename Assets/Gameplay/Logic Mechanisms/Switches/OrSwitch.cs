@@ -3,39 +3,35 @@ using UniRx;
 
 public class OrSwitch : LogicalMechanism
 {
-    [SerializeField] private LogicalMechanism _firstInput;
-    [SerializeField] private LogicalMechanism _secondInput;
-
-    private void Awake()
+    private void OnValidate()
     {
-        if (_firstInput == null || _secondInput == null)
+        if (_inputs == null || _inputs.Length < 2)
         {
-            Debug.LogError($"{gameObject} Or switch should have 2 input logical mechanisms");
+            Debug.LogError($"{gameObject} Or switch should have at least 2 inputs");
         }
     }
 
     private void OnEnable()
     {
-        _firstInput
-            .Output
-            .Subscribe(value => OnInputChanged())
-            .AddTo(_disposable);
-        
-        _secondInput
-            .Output
-            .Subscribe(value => OnInputChanged())
-            .AddTo(_disposable);
-
-        void OnInputChanged()
+        foreach (LogicalMechanism input in _inputs)
         {
-            if (_firstInput.Output.Value == true || _secondInput.Output.Value == true)
-            {
-                _output.Value = true;
-            }
-            else
-            {
-                _output.Value = false; 
-            }
+            input
+                .Output
+                .Skip(1)
+                .Subscribe(value =>
+                {
+                    if (value == true)
+                    {
+                        _output.Value = true;
+                    }
+                    else
+                    {
+                        _output.Value = OrInputsValue;
+                    }
+                })
+                .AddTo(Disposable);
         }
     }
+
+    private void Start() => SetInitialOutputValue(OrInputsValue);
 }

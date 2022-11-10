@@ -1,5 +1,6 @@
-using System.Collections;
+using System;
 using UnityEngine;
+using UniRx;
 
 public class InteractableButton : LogicalMechanism, IInteractable
 {
@@ -7,29 +8,43 @@ public class InteractableButton : LogicalMechanism, IInteractable
 
     [Range(0, float.MaxValue)]
     [SerializeField] private float _stickingTime;
-    private WaitForSeconds _waitStickingTime;
 
     public bool IsInteractionAllowed => _isInteractionAllowed;
-
-    private void Awake()
+ 
+    private void OnEnable()
     {
-        _waitStickingTime = new WaitForSeconds(_stickingTime);
+        foreach (LogicalMechanism input in _inputs)
+        {
+            input
+                .Output
+                .Skip(1)
+                .Where(value => value == true)
+                .Subscribe(value => _output.Value = value)
+                .AddTo(Disposable);
+        }
+
+        Output
+            .Where(value => value == true)
+            .Delay(TimeSpan.FromSeconds(_stickingTime))
+            .Subscribe(value =>
+            {
+                _output.Value = false;
+            })
+            .AddTo(Disposable);
     }
+
+    private void Start() => SetInitialOutputValue(OrInputsValue);
 
     public void Interact()
     {
         if (_output.Value == false)
         {
-            StartCoroutine(Press());
+            Press();
         }        
     }
 
-    private IEnumerator Press()
+    private void Press()
     {
         _output.Value = true;
-
-        yield return _waitStickingTime;
-        
-        _output.Value = false;
     }
 }

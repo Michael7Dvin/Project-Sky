@@ -41,10 +41,6 @@ public abstract class BaseAreaDamager : MonoBehaviour
         {
             Activate();
         }
-        else
-        {
-            Deactivate();
-        }
     }
 
     private void OnEnable()

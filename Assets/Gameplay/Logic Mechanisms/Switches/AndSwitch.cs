@@ -3,39 +3,51 @@ using UniRx;
 
 public class AndSwitch : LogicalMechanism
 {
-    [SerializeField] private LogicalMechanism _firstInput;
-    [SerializeField] private LogicalMechanism _secondInput;
-
-    private void Awake()
+    private bool AndInputsValue
     {
-        if (_firstInput == null || _secondInput == null)
+        get
         {
-            Debug.LogError($"{gameObject} And switch should have 2 input logical mechanisms");
+            foreach (LogicalMechanism input in _inputs)
+            {
+                if (input.Output.Value == false)
+                {                    
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    private void OnValidate()
+    {
+        if (_inputs == null || _inputs.Length < 2)
+        {
+            Debug.LogError($"{gameObject} And switch should have at least 2 inputs");
         }
     }
 
     private void OnEnable()
     {
-        _firstInput
-            .Output
-            .Subscribe(value => OnInputChanged())
-            .AddTo(_disposable);
-
-        _secondInput
-            .Output
-            .Subscribe(value => OnInputChanged())
-            .AddTo(_disposable);
-
-        void OnInputChanged()
+        foreach (LogicalMechanism input in _inputs)
         {
-            if (_firstInput.Output.Value == true && _secondInput.Output.Value == true)
-            {
-                _output.Value = true;
-            }
-            else
-            {
-                _output.Value = false;
-            }
+            input
+                .Output
+                .Skip(1)
+                .Subscribe(value =>
+                {
+                    if (value == false)
+                    {
+                        _output.Value = false;
+                    }
+                    else
+                    {
+                        _output.Value = AndInputsValue;
+                    }
+                })
+                .AddTo(Disposable);
         }
     }
+
+    private void Start() => SetInitialOutputValue(AndInputsValue);
 }

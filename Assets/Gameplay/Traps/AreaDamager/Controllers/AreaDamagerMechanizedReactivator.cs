@@ -20,6 +20,7 @@ public class AreaDamagerMechanizedReactivator : BaseAreaDamagerReactivator
         {
             _activatingInput
                 .Output
+                .Skip(1)
                 .Where(value => value == true)
                 .Subscribe(value => _areaDamager.Activate())
                 .AddTo(_disposable);
@@ -29,6 +30,7 @@ public class AreaDamagerMechanizedReactivator : BaseAreaDamagerReactivator
         {
             _deactivatingInput
                 .Output
+                .Skip(1)
                 .Where(value => value == false)
                 .Subscribe(value => _areaDamager.Deactivate())
                 .AddTo(_disposable);

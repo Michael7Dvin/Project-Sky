@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
@@ -6,63 +5,57 @@ using UniRx.Triggers;
 
 public abstract class BaseAreaDamager : MonoBehaviour
 {
-    protected readonly List<Health> _damagedObjects = new List<Health>();
-    
-    [SerializeField] private Collider _damagedAreaTrigger;
+    protected readonly List<Health> _damagingObjects = new List<Health>();
+    protected readonly CompositeDisposable _disposable = new CompositeDisposable();
 
-    [Range(0f, float.MaxValue)]
-    [SerializeField] private float _damage;
+    [SerializeField] private bool _isInitiallyActivated;
 
-    [SerializeField] private bool _isActivatedInitially;
+    [SerializeField] private Collider _damagingAreaTrigger;
 
-    private readonly ReactiveCommand _activated = new ReactiveCommand();
-    private readonly ReactiveCommand _deactivated = new ReactiveCommand();
-    private readonly CompositeDisposable _disposable = new CompositeDisposable();
+    private readonly ReactiveProperty<bool> _isActivated = new ReactiveProperty<bool>();
 
-    public IObservable<Unit> Activated => _activated;
-    public IObservable<Unit> Deactivated => _deactivated;
-    protected float Damage => _damage;
-
-    private void OnValidate()
-    {
-        if (_damagedAreaTrigger == null)
-        {
-            Debug.LogError($"{gameObject} Damaged Objects Trigger cannot be null");
-        }
-        else
-        {
-            _damagedAreaTrigger.isTrigger = true;
-        }
-    }
+    public IReadOnlyReactiveProperty<bool> IsActivated => _isActivated;
 
     private void Awake()
     {
-        if (_isActivatedInitially == true)
+        if (_isInitiallyActivated == true)
         {
             Activate();
         }
     }
 
-    private void OnEnable()
+    private void OnValidate()
     {
-        _damagedAreaTrigger
+        if (_damagingAreaTrigger == null)
+        {
+            Debug.LogError($"{gameObject} Damaged Objects Trigger cannot be null");
+        }
+        else
+        {
+            _damagingAreaTrigger.isTrigger = true;
+        }
+    }
+    
+    protected virtual void OnEnable()
+    {
+        _damagingAreaTrigger
             .OnTriggerEnterAsObservable()
             .Subscribe(collider =>
             {
                 if (collider.TryGetComponent(out Health health))
                 {
-                    _damagedObjects.Add(health);
+                    _damagingObjects.Add(health);
                 }
             })
             .AddTo(_disposable);
 
-        _damagedAreaTrigger
+        _damagingAreaTrigger
             .OnTriggerExitAsObservable()
             .Subscribe(collider =>
             {
                 if (collider.TryGetComponent(out Health health))
                 {
-                    _damagedObjects.Remove(health);
+                    _damagingObjects.Remove(health);
                 }
             })
             .AddTo(_disposable);
@@ -70,6 +63,6 @@ public abstract class BaseAreaDamager : MonoBehaviour
 
     private void OnDisable() => _disposable.Clear();
 
-    public virtual void Activate() => _activated.Execute();
-    public virtual void Deactivate() => _deactivated.Execute();
+    public void Activate() => _isActivated.Value = true;
+    public void Deactivate() => _isActivated.Value = false;
 }

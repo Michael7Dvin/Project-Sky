@@ -1,39 +1,27 @@
 using System;
 using UnityEngine;
 using UniRx;
+using Cysharp.Threading.Tasks;
 
 public class Delay : LogicalMechanism
 {
     [Range(0, float.MaxValue)]
     [SerializeField] private float _delay;
 
-    private void OnEnable()
+    protected override void Awake()
     {
-        foreach (LogicalMechanism input in _inputs)
-        {
-            input
-                .Output
-                .Skip(1)
-                .Delay(TimeSpan.FromSeconds(_delay))
-                .Subscribe(value =>
-                {
-                    _output.Value = value;
-                })
-                .AddTo(Disposable);
-        }        
+        FireInitialValue(_delay);
     }
 
-    private void Start()
+    protected override void SubscribeOnInput(IReadOnlyReactiveProperty<bool> input)
     {
-        CompositeDisposable disposable = new CompositeDisposable();
-
-        Observable
-            .Timer(TimeSpan.FromSeconds(_delay))
-            .Subscribe(_ =>
+        input
+            .Skip(1)
+            .Delay(TimeSpan.FromSeconds(_delay))
+            .Subscribe(value =>
             {
-                SetInitialOutputValue(OrInputsValue);
-                disposable.Dispose();
+                Output.SetValueAndForceNotify(value);
             })
-            .AddTo(disposable);        
+            .AddTo(Disposable);
     }
 }

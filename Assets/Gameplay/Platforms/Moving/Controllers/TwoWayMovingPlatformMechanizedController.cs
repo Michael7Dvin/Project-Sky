@@ -28,7 +28,7 @@ public class TwoWayMovingPlatformMechanizedController : MonoBehaviour
         if (_moveToNextMechanism is not null)
         {
             _moveToNextMechanism
-                .Output
+                .ReadOnlyOutput
                 .Where(value => value == true)
                 .Subscribe(value => _platform.TryMoveToNext())
                 .AddTo(_disposable);
@@ -37,7 +37,7 @@ public class TwoWayMovingPlatformMechanizedController : MonoBehaviour
         if (_moveToPreviousMechanism is not null)
         {
             _moveToPreviousMechanism
-                .Output
+                .ReadOnlyOutput
                 .Where(value => value == true)
                 .Subscribe(value => _platform.TryMoveToPrevious())
                 .AddTo(_disposable);

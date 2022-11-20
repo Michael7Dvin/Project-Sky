@@ -97,11 +97,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3079717172256828231}
-  - component: {fileID: 2447296141792489977}
-  - component: {fileID: 3258322504757054638}
-  - component: {fileID: 2447296141792489976}
   - component: {fileID: 2447296141792489982}
   - component: {fileID: 2447296141792489983}
+  - component: {fileID: 2447296141792489977}
+  - component: {fileID: 2447296141792489976}
+  - component: {fileID: 3258322504757054638}
   m_Layer: 0
   m_Name: Pressure Plate
   m_TagString: Untagged
@@ -126,51 +126,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &2447296141792489977
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2447296141792489981}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e6d494dc82954ae4d8334b3f75000715, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3258322504757054638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2447296141792489981}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38ecb5cf27c54e647ade45428d027cca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _pressingAreaTrigger: {fileID: 2447296141792489982}
---- !u!114 &2447296141792489976
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2447296141792489981}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ecd4d672f162ea428ee53c4277ce9ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &2447296141792489982
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -197,6 +152,53 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.12951243, y: 0.029216237, z: 0.12951234}
   m_Center: {x: 0.00023417614, y: 0.0141569115, z: -0.00023424548}
+--- !u!95 &2447296141792489977
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2447296141792489981}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e6d494dc82954ae4d8334b3f75000715, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2447296141792489976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2447296141792489981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ecd4d672f162ea428ee53c4277ce9ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3258322504757054638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2447296141792489981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38ecb5cf27c54e647ade45428d027cca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _inputs: []
+  _initalOutputValue: 0
+  _pressingAreaTrigger: {fileID: 2447296141792489982}
 --- !u!1 &2807881455458086769
 GameObject:
   m_ObjectHideFlags: 0

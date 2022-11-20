@@ -24,7 +24,8 @@ public class DoorMechanizedController : MonoBehaviour
     private void OnEnable()
     {
         _logicalMechanism
-            .Output
+            .ReadOnlyOutput
+            .Skip(1)
             .Subscribe(value => OnOutputValueChanged(value))
             .AddTo(_disposable);
     }

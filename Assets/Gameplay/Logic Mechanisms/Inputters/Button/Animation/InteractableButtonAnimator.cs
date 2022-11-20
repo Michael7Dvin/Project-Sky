@@ -20,7 +20,7 @@ public class InteractableButtonAnimator : MonoBehaviour
     private void OnEnable()
     {
         _button
-            .Output
+            .ReadOnlyOutput
             .Subscribe(status =>
             {
                 if (status == true)

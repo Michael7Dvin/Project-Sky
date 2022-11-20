@@ -10,41 +10,32 @@ public class InteractableButton : LogicalMechanism, IInteractable
     [SerializeField] private float _stickingTime;
 
     public bool IsInteractionAllowed => _isInteractionAllowed;
- 
-    private void OnEnable()
+
+    protected override void OnEnable()
     {
-        foreach (LogicalMechanism input in _inputs)
-        {
-            input
-                .Output
-                .Skip(1)
-                .Where(value => value == true)
-                .Subscribe(value => _output.Value = value)
-                .AddTo(Disposable);
-        }
+        base.OnEnable();
 
         Output
             .Where(value => value == true)
             .Delay(TimeSpan.FromSeconds(_stickingTime))
-            .Subscribe(value =>
-            {
-                _output.Value = false;
-            })
+            .Subscribe(value => Output.Value = false)
             .AddTo(Disposable);
     }
 
-    private void Start() => SetInitialOutputValue(OrInputsValue);
-
     public void Interact()
     {
-        if (_output.Value == false)
+        if (ReadOnlyOutput.Value == false)
         {
-            Press();
+            Output.Value = true;
         }        
     }
 
-    private void Press()
+    protected override void SubscribeOnInput(IReadOnlyReactiveProperty<bool> input)
     {
-        _output.Value = true;
+        input
+            .Skip(1)
+            .Where(value => value == true)
+            .Subscribe(value => Output.Value = value)
+            .AddTo(Disposable);
     }
 }

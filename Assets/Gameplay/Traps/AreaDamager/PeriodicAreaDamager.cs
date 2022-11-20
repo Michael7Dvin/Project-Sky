@@ -3,28 +3,36 @@ using UniRx;
 
 public class PeriodicAreaDamager : BaseAreaDamager
 {
+    [Range(0f, float.MaxValue)]
+    [SerializeField] private float _damage;
+
     private readonly CompositeDisposable _damgingDisposable = new CompositeDisposable();
 
-    public override void Activate()
+    protected override void OnEnable()
     {
-        base.Activate();
+        base.OnEnable();
 
-        Observable
-            .EveryUpdate()
-            .Subscribe(_ =>
+        IsActivated
+            .Subscribe(value =>
             {
-                foreach (Health health in _damagedObjects)
+                if (value == true)
                 {
-                    health.TakeDamage(Damage * Time.deltaTime);
+                    Observable
+                        .EveryUpdate()
+                        .Subscribe(_ =>
+                        {
+                            foreach (Health health in _damagingObjects)
+                            {
+                                health.TakeDamage(_damage * Time.deltaTime);
+                            }
+                        })
+                        .AddTo(_damgingDisposable);
+                }
+                else
+                {
+                    _damgingDisposable.Clear();
                 }
             })
-            .AddTo(_damgingDisposable);
-    }
-
-    public override void Deactivate()
-    {
-        base.Deactivate();
-
-        _damgingDisposable.Clear();
+            .AddTo(_disposable);
     }
 }

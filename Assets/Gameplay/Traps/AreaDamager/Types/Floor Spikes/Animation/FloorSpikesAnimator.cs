@@ -20,13 +20,18 @@ public class FloorSpikesAnimator : MonoBehaviour
     private void OnEnable()
     {
         _spikes
-            .Activated
-            .Subscribe(_ => _animator.SetBool(_isActivatedBoolParameterHash, true))
-            .AddTo(_disposable);
-
-        _spikes
-            .Deactivated
-            .Subscribe(_ => _animator.SetBool(_isActivatedBoolParameterHash, false))
+            .IsActivated
+            .Subscribe(value =>
+            {
+                if (value == true)
+                {
+                    _animator.SetBool(_isActivatedBoolParameterHash, true);
+                }
+                else
+                {
+                    _animator.SetBool(_isActivatedBoolParameterHash, false);
+                }
+            })
             .AddTo(_disposable);
     }
 

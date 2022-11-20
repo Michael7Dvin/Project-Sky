@@ -2,17 +2,11 @@ using UniRx;
 
 public class InverseSwitch : LogicalMechanism
 {
-    private void OnEnable()
+    protected override void SubscribeOnInput(IReadOnlyReactiveProperty<bool> input)
     {
-        foreach (LogicalMechanism input in _inputs)
-        {
-            input
-               .Output
-               .Skip(1)
-               .Subscribe(value => _output.Value = !value)
-               .AddTo(Disposable);
-        }          
+        input
+            .Skip(1)
+            .Subscribe(value => Output.SetValueAndForceNotify(!value))
+            .AddTo(Disposable);
     }
-
-    private void Start() => SetInitialOutputValue(!OrInputsValue);
 }

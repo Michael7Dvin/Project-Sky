@@ -20,7 +20,7 @@ public class InteractableSwitchAnimator : MonoBehaviour
     private void OnEnable()
     {
         _switch
-            .Output
+            .ReadOnlyOutput
             .Subscribe(status =>
             {
                 if (status == true)

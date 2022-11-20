@@ -1,46 +1,71 @@
+using System;
 using UnityEngine;
 using UniRx;
+using Cysharp.Threading.Tasks;
 
 public abstract class LogicalMechanism : MonoBehaviour
 {
-    [SerializeField] protected LogicalMechanism[] _inputs;
-    protected readonly ReactiveProperty<bool> _output = new ReactiveProperty<bool>();
-    
-    [SerializeField] private bool _initalOutputValue;
-    private bool _isInitialValueWasSet;
-    private readonly CompositeDisposable _disposable = new CompositeDisposable();
-    
-    public IReadOnlyReactiveProperty<bool> Output => _output;
-    protected bool OrInputsValue
+    protected const float INITIAL_VALUE_SET_DELAY = 0.01f;
+
+    [SerializeField] private bool _initialValue;
+    [SerializeField] private bool _fireInitialValueToSubscribers;
+
+    [SerializeField] private LogicalMechanism[] _inputs;
+
+    private ReactiveProperty<bool> _output;
+
+    public IReadOnlyReactiveProperty<bool> ReadOnlyOutput
     {
         get
         {
-            if (_inputs == null)
+            if (_output == null)
             {
-                return false;
+                _output = new ReactiveProperty<bool>(_initialValue);
             }
 
-            foreach (LogicalMechanism input in _inputs)
-            {
-                if (input.Output.Value == true)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return _output;
         }
     }
-    protected CompositeDisposable Disposable => _disposable;
-  
+
+    protected ReactiveProperty<bool> Output
+    {
+        get
+        {
+            if (_output == null)
+            {
+                _output = new ReactiveProperty<bool>(_initialValue);
+            }
+
+            return _output;
+        }
+    }        
+
+    protected LogicalMechanism[] Inputs => _inputs;
+    protected CompositeDisposable Disposable { get; private set; } = new CompositeDisposable();
+
+    protected virtual void Awake()
+    {
+        FireInitialValue(INITIAL_VALUE_SET_DELAY);
+    }
+
+    protected virtual void OnEnable()
+    {
+        foreach (LogicalMechanism input in Inputs)
+        {
+            SubscribeOnInput(input.Output);
+        }
+    }
+
     private void OnDisable() => Disposable.Clear();
 
-    protected void SetInitialOutputValue(bool inputsValue)
+    protected async void FireInitialValue(float delay)
     {
-        if (_isInitialValueWasSet == false)
+        if (_fireInitialValueToSubscribers == true)
         {
-            _output.Value = _initalOutputValue || inputsValue;
-            _isInitialValueWasSet = true;
-        }        
+            await UniTask.Delay(TimeSpan.FromSeconds(delay));
+            Output.SetValueAndForceNotify(_initialValue);
+        }
     }
+
+    protected abstract void SubscribeOnInput(IReadOnlyReactiveProperty<bool> input);
 }

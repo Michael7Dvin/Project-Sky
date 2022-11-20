@@ -20,7 +20,7 @@ public class PressurePlateAnimator : MonoBehaviour
     private void OnEnable()
     {
         _pressurePlate
-            .Output
+            .ReadOnlyOutput
             .Subscribe(status =>
             {
                 if (status == true)

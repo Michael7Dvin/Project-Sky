@@ -7,26 +7,19 @@ public class InteractableSwitch : LogicalMechanism, IInteractable
 
     public bool IsInteractionAllowed => _isInteractionAllowed;
 
-
-    private void OnEnable()
-    {                
-        foreach (LogicalMechanism input in _inputs)
-        {
-            input
-                .Output
-                .Skip(1)
-                .Subscribe(value => _output.Value = value)
-                .AddTo(Disposable);
-        }
-    }
-
-    private void Start() => SetInitialOutputValue(OrInputsValue);
-
     public void Interact()
     {
         if (_isInteractionAllowed == true)
         {
-            _output.Value = !_output.Value;
+            Output.Value = !Output.Value;
         }
+    }
+
+    protected override void SubscribeOnInput(IReadOnlyReactiveProperty<bool> input)
+    {
+        input
+            .Skip(1)
+            .Subscribe(value => Output.Value = value)
+            .AddTo(Disposable);
     }
 }

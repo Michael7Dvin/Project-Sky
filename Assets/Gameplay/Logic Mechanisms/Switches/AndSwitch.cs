@@ -7,9 +7,9 @@ public class AndSwitch : LogicalMechanism
     {
         get
         {
-            foreach (LogicalMechanism input in _inputs)
+            foreach (LogicalMechanism input in Inputs)
             {
-                if (input.Output.Value == false)
+                if (input.ReadOnlyOutput.Value == false)
                 {                    
                     return false;
                 }
@@ -21,33 +21,27 @@ public class AndSwitch : LogicalMechanism
 
     private void OnValidate()
     {
-        if (_inputs == null || _inputs.Length < 2)
+        if (Inputs.Length < 2)
         {
             Debug.LogError($"{gameObject} And switch should have at least 2 inputs");
         }
     }
 
-    private void OnEnable()
+    protected override void SubscribeOnInput(IReadOnlyReactiveProperty<bool> input)
     {
-        foreach (LogicalMechanism input in _inputs)
-        {
-            input
-                .Output
-                .Skip(1)
-                .Subscribe(value =>
+        input
+            .Skip(1)
+            .Subscribe(value =>
+            {
+                if (value == false)
                 {
-                    if (value == false)
-                    {
-                        _output.Value = false;
-                    }
-                    else
-                    {
-                        _output.Value = AndInputsValue;
-                    }
-                })
-                .AddTo(Disposable);
-        }
+                    Output.Value = false;
+                }
+                else
+                {
+                    Output.Value = AndInputsValue;
+                }
+            })
+            .AddTo(Disposable);
     }
-
-    private void Start() => SetInitialOutputValue(AndInputsValue);
 }

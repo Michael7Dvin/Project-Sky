@@ -20,16 +20,9 @@ public class PressurePlate : LogicalMechanism
         }
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        foreach (LogicalMechanism input in _inputs)
-        {
-            input
-                .Output
-                .Skip(1)
-                .Subscribe(value => _output.Value = value)
-                .AddTo(Disposable);
-        }
+        base.OnEnable();
 
         SubscribeOnPressingAreaTrigger();
         SubscribeOnPressingObjectsChanging();
@@ -79,14 +72,20 @@ public class PressurePlate : LogicalMechanism
         {
             if (_pressingObjects.Count == 0)
             {
-                _output.Value = false;
+                Output.Value = false;
             }
             else
             {
-                _output.Value = true;
+                Output.Value = true;                
             }
         }
     }
 
-    private void Start() => SetInitialOutputValue(OrInputsValue);
+    protected override void SubscribeOnInput(IReadOnlyReactiveProperty<bool> input)
+    {
+        input
+            .Skip(1)
+            .Subscribe(value => Output.Value = value)
+            .AddTo(Disposable);
+    }
 }

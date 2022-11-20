@@ -98,8 +98,8 @@ GameObject:
   - component: {fileID: 3224094172296614692}
   - component: {fileID: 2879374927966095770}
   - component: {fileID: 2879374927966095773}
-  - component: {fileID: 2879374927966095775}
   - component: {fileID: 2879374927966095772}
+  - component: {fileID: 2879374927966095775}
   m_Layer: 0
   m_Name: 'Lever '
   m_TagString: Untagged
@@ -158,20 +158,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2879374927966095775
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2879374927966095774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6583fc7c71d35b04aa5b3b3c45bb16ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _isInteractionAllowed: 1
-  _initalStatus: 0
 --- !u!114 &2879374927966095772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,6 +170,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 526a3f6c67f330c44b8bce163aee2fe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2879374927966095775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2879374927966095774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6583fc7c71d35b04aa5b3b3c45bb16ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _inputs: []
+  _initalOutputValue: 0
+  _isInteractionAllowed: 1
 --- !u!1 &3741632831593901205
 GameObject:
   m_ObjectHideFlags: 0

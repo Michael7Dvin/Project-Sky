@@ -1,12 +1,24 @@
+using UnityEngine;
+using UniRx;
+
 public class OnceAreaDamager : BaseAreaDamager
 {
-    public override void Activate()
-    {
-        base.Activate();
+    [Range(0f, float.MaxValue)]
+    [SerializeField] private float _damage;
 
-        foreach (Health health in _damagedObjects)
-        {
-            health.TakeDamage(Damage);
-        }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        IsActivated
+            .Where(value => value == true)
+            .Subscribe(value =>
+            {
+                foreach (Health health in _damagingObjects)
+                {
+                    health.TakeDamage(_damage);
+                }
+            })
+            .AddTo(_disposable);
     }
 }

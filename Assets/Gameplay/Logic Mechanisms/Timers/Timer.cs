@@ -7,31 +7,29 @@ public class Timer : LogicalMechanism
     [Range(0, float.MaxValue)]
     [SerializeField] private float _time;
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        foreach (LogicalMechanism input in _inputs)
-        {
-            input
-                .Output
-                .Skip(1)
-                .Where(value => value == true)
-                .Subscribe(value =>
-                {
-                    _output.Value = value;
-                })
-                .AddTo(Disposable);        
-        }
-        
+        base.OnEnable();
 
-        Output
+        ReadOnlyOutput
             .Where(value => value == true)
             .Delay(TimeSpan.FromSeconds(_time))
             .Subscribe(value =>
             {
-                _output.Value = false;
+                Output.Value = false;
             })
             .AddTo(Disposable);
     }
 
-    private void Start() => SetInitialOutputValue(OrInputsValue);
+    protected override void SubscribeOnInput(IReadOnlyReactiveProperty<bool> input)
+    {
+        input
+           .Skip(1)
+           .Where(value => value == true)
+           .Subscribe(value =>
+           {
+               Output.Value = true;
+           })
+           .AddTo(Disposable);
+    }
 }

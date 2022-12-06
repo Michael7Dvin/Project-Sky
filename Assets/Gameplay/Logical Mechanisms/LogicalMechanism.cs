@@ -8,7 +8,7 @@ public abstract class LogicalMechanism : MonoBehaviour
     protected const float INITIAL_VALUE_SET_DELAY = 0.01f;
 
     [SerializeField] private bool _initialValue;
-    [SerializeField] private bool _fireInitialValueToSubscribers;
+    [SerializeField] private bool _notifyOfInitialValue;
 
     [SerializeField] private LogicalMechanism[] _inputs;
 
@@ -60,7 +60,7 @@ public abstract class LogicalMechanism : MonoBehaviour
 
     protected async void FireInitialValue(float delay)
     {
-        if (_fireInitialValueToSubscribers == true)
+        if (_notifyOfInitialValue == true)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(delay));
             Output.SetValueAndForceNotify(_initialValue);

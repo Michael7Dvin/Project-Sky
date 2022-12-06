@@ -3,6 +3,8 @@ using UniRx;
 
 public class AndSwitch : LogicalMechanism
 {
+    [SerializeField] private bool _notifyWhenInputChanged;
+
     private bool AndInputsValue
     {
         get
@@ -35,13 +37,25 @@ public class AndSwitch : LogicalMechanism
             {
                 if (value == false)
                 {
-                    Output.Value = false;
+                    SetOutputValue(false);
                 }
                 else
                 {
-                    Output.Value = AndInputsValue;
+                    SetOutputValue(AndInputsValue);
                 }
             })
             .AddTo(Disposable);
+    }
+
+    private void SetOutputValue(bool value)
+    {
+        if (_notifyWhenInputChanged == true)
+        {
+            Output.SetValueAndForceNotify(value);
+        }
+        else
+        {
+            Output.Value = value;
+        }
     }
 }

@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 2447296141792489983}
   - component: {fileID: 2447296141792489977}
   - component: {fileID: 2447296141792489976}
-  - component: {fileID: 3258322504757054638}
+  - component: {fileID: 7275155187647505488}
   m_Layer: 0
   m_Name: Pressure Plate
   m_TagString: Untagged
@@ -184,7 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ecd4d672f162ea428ee53c4277ce9ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3258322504757054638
+--- !u!114 &7275155187647505488
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -193,12 +193,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2447296141792489981}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38ecb5cf27c54e647ade45428d027cca, type: 3}
+  m_Script: {fileID: 11500000, guid: 33b841535535fdd4486f7906744ae170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _initialValue: 0
+  _fireInitialValueToSubscribers: 0
   _inputs: []
-  _initalOutputValue: 0
-  _pressingAreaTrigger: {fileID: 2447296141792489982}
+  _detectingAreaTrigger: {fileID: 2447296141792489982}
 --- !u!1 &2807881455458086769
 GameObject:
   m_ObjectHideFlags: 0

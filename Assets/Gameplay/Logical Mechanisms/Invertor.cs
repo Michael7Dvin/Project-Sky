@@ -1,6 +1,6 @@
 using UniRx;
 
-public class InverseSwitch : LogicalMechanism
+public class Invertor : LogicalMechanism
 {
     protected override void SubscribeOnInput(IReadOnlyReactiveProperty<bool> input)
     {

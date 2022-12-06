@@ -3,6 +3,8 @@ using UniRx;
 
 public class OrSwitch : LogicalMechanism
 {
+    [SerializeField] private bool _notifyWhenInputChanged;
+
     private bool OrInputsValue
     {
         get
@@ -35,13 +37,25 @@ public class OrSwitch : LogicalMechanism
             {
                 if (value == true)
                 {
-                    Output.Value = true;
+                    SetOutputValue(true);
                 }
                 else
                 {
-                    Output.Value = OrInputsValue;
+                    SetOutputValue(OrInputsValue);
                 }
             })
             .AddTo(Disposable);
+    }
+
+    private void SetOutputValue(bool value)
+    {
+        if (_notifyWhenInputChanged == true)
+        {
+            Output.SetValueAndForceNotify(value);
+        }
+        else
+        {
+            Output.Value = value;
+        }
     }
 }

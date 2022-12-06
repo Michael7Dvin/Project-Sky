@@ -40,8 +40,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1084871288110012768}
-  - component: {fileID: 3938751864413784820}
   - component: {fileID: 1697098919219817532}
+  - component: {fileID: 5096542393880676320}
   - component: {fileID: 6573271574256997395}
   - component: {fileID: 8071260285459804985}
   - component: {fileID: 860000730656239187}
@@ -72,19 +72,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &3938751864413784820
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4029794988246222763}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.17221513, y: 0.02189263, z: 0.17430848}
-  m_Center: {x: -0.000000015401717, y: 0.013911742, z: -0.016627094}
 --- !u!65 &1697098919219817532
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -98,6 +85,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.17289639, y: 0.005426507, z: 0.17430851}
   m_Center: {x: -0.00034060897, y: 0.00021587555, z: -0.016627077}
+--- !u!65 &5096542393880676320
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4029794988246222763}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.17221513, y: 0.02189263, z: 0.17430848}
+  m_Center: {x: -0.000000015401717, y: 0.013911742, z: -0.016627094}
 --- !u!95 &6573271574256997395
 Animator:
   serializedVersion: 4
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isInitiallyActivated: 0
-  _damagingAreaTrigger: {fileID: 3938751864413784820}
+  _damagingAreaTrigger: {fileID: 5096542393880676320}
   _damage: 10
 --- !u!114 &1669375390890785324
 MonoBehaviour:
@@ -295,7 +295,7 @@ GameObject:
   - component: {fileID: 8809510973838793982}
   - component: {fileID: 8809510973838793980}
   m_Layer: 0
-  m_Name: Pressure control
+  m_Name: Pressure Control Scheme
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -338,13 +338,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8809510973838793973}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38ecb5cf27c54e647ade45428d027cca, type: 3}
+  m_Script: {fileID: 11500000, guid: 33b841535535fdd4486f7906744ae170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _initialValue: 0
   _fireInitialValueToSubscribers: 0
   _inputs: []
-  _pressingAreaTrigger: {fileID: 8809510973838793971}
+  _detectingAreaTrigger: {fileID: 8809510973838793971}
 --- !u!114 &8809510973838793981
 MonoBehaviour:
   m_ObjectHideFlags: 0

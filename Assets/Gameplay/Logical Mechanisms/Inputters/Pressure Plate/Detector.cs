@@ -2,21 +2,21 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-public class PressurePlate : LogicalMechanism
+public class Detector : LogicalMechanism
 {
-    [SerializeField] private Collider _pressingAreaTrigger;
+    [SerializeField] private Collider _detectingAreaTrigger;
 
-    private readonly ReactiveCollection<LocomotionComposition> _pressingObjects = new ReactiveCollection<LocomotionComposition>();
+    private readonly ReactiveCollection<LocomotionComposition> _detectedObjects = new ReactiveCollection<LocomotionComposition>();
 
     private void OnValidate()
     {
-        if (_pressingAreaTrigger == null)
+        if (_detectingAreaTrigger == null)
         {
             Debug.LogError($"{gameObject} Pressing Area Trigger cannot be null");
         }
         else
         {
-            _pressingAreaTrigger.isTrigger = true;
+            _detectingAreaTrigger.isTrigger = true;
         }
     }
 
@@ -24,53 +24,53 @@ public class PressurePlate : LogicalMechanism
     {
         base.OnEnable();
 
-        SubscribeOnPressingAreaTrigger();
-        SubscribeOnPressingObjectsChanging();
+        SubscribeOnDetectingAreaTrigger();
+        SubscribeOnDetectedObjectsChanging();
 
-        void SubscribeOnPressingAreaTrigger()
+        void SubscribeOnDetectingAreaTrigger()
         {
-            _pressingAreaTrigger
+            _detectingAreaTrigger
                 .OnTriggerEnterAsObservable()
                 .Subscribe(collider =>
                 {
                     if (collider.TryGetComponent(out LocomotionComposition locomotionComposition))
                     {
-                        _pressingObjects.Add(locomotionComposition);
+                        _detectedObjects.Add(locomotionComposition);
                     }
                 })
                 .AddTo(Disposable);
 
-            _pressingAreaTrigger
+            _detectingAreaTrigger
                 .OnTriggerExitAsObservable()
                 .Subscribe(collider =>
                 {
                     if (collider.TryGetComponent(out LocomotionComposition locomotionComposition))
                     {
-                        _pressingObjects.Remove(locomotionComposition);
+                        _detectedObjects.Remove(locomotionComposition);
                     }
                 })
                 .AddTo(Disposable);
         }            
-        void SubscribeOnPressingObjectsChanging()
+        void SubscribeOnDetectedObjectsChanging()
         {
-            _pressingObjects
+            _detectedObjects
                 .ObserveAdd()
-                .Subscribe(_ => OnPressingObjectsChanged())
+                .Subscribe(_ => OnDetectedObjectsChanged())
                 .AddTo(Disposable);
 
-            _pressingObjects
+            _detectedObjects
                 .ObserveRemove()
-                .Subscribe(_ => OnPressingObjectsChanged())
+                .Subscribe(_ => OnDetectedObjectsChanged())
                 .AddTo(Disposable);
 
-            _pressingObjects
+            _detectedObjects
                 .ObserveReplace()
-                .Subscribe(_ => OnPressingObjectsChanged())
+                .Subscribe(_ => OnDetectedObjectsChanged())
                 .AddTo(Disposable);
         }
-        void OnPressingObjectsChanged()
+        void OnDetectedObjectsChanged()
         {
-            if (_pressingObjects.Count == 0)
+            if (_detectedObjects.Count == 0)
             {
                 Output.Value = false;
             }

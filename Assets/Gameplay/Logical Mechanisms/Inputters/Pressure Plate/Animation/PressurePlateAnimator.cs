@@ -1,19 +1,19 @@
 using UniRx;
 using UnityEngine;
 
-[RequireComponent(typeof(PressurePlate), typeof(Animator))]
+[RequireComponent(typeof(Detector), typeof(Animator))]
 public class PressurePlateAnimator : MonoBehaviour
 {
     private readonly int _statusBoolParameterHash = Animator.StringToHash("Output");
 
-    private PressurePlate _pressurePlate;
+    private Detector _pressurePlate;
     private Animator _animator;
 
     private readonly CompositeDisposable _disposable = new CompositeDisposable();
 
     private void Awake()
     {
-        _pressurePlate = GetComponent<PressurePlate>();
+        _pressurePlate = GetComponent<Detector>();
         _animator = GetComponent<Animator>();
     }
 
